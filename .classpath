@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-10">
+	<classpathentry kind="src" output="target/classes" path="src">
 		<attributes>
-			<attribute name="module" value="true"/>
+			<attribute name="optional" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/Users/fabiopereira/dev/pm-clinica-saracura/lib/antlr-2.7.7.jar"/>
-	<classpathentry kind="lib" path="/Users/fabiopereira/dev/pm-clinica-saracura/lib/dom4j-1.6.1.jar"/>
-	<classpathentry kind="lib" path="/Users/fabiopereira/dev/pm-clinica-saracura/lib/hibernate-commons-annotations-4.0.2.Final.jar"/>
-	<classpathentry kind="lib" path="/Users/fabiopereira/dev/pm-clinica-saracura/lib/hibernate-core-4.2.19.Final.jar"/>
-	<classpathentry kind="lib" path="/Users/fabiopereira/dev/pm-clinica-saracura/lib/hibernate-entitymanager-4.2.19.Final.jar"/>
-	<classpathentry kind="lib" path="/Users/fabiopereira/dev/pm-clinica-saracura/lib/hibernate-jpa-2.1-api-1.0.0.Final.jar"/>
-	<classpathentry kind="lib" path="/Users/fabiopereira/dev/pm-clinica-saracura/lib/hibernate-jpamodelgen-5.2.12.Final.jar"/>
-	<classpathentry kind="lib" path="/Users/fabiopereira/dev/pm-clinica-saracura/lib/hibernate-release-4.2.19.Final.zip"/>
-	<classpathentry kind="lib" path="/Users/fabiopereira/dev/pm-clinica-saracura/lib/javassist-3.18.1-GA.jar"/>
-	<classpathentry kind="lib" path="/Users/fabiopereira/dev/pm-clinica-saracura/lib/jboss-logging-3.1.0.GA.jar"/>
-	<classpathentry kind="lib" path="/Users/fabiopereira/dev/pm-clinica-saracura/lib/jboss-transaction-api_1.1_spec-1.0.1.Final.jar"/>
-	<classpathentry kind="lib" path="/Users/fabiopereira/dev/CSBI_AulaJPA/lib/mysql-connector-java-5.1.44-bin.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
+		<attributes>
+			<attribute name="module" value="true"/>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>

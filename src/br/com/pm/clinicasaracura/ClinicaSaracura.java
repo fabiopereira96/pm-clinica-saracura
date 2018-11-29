@@ -34,6 +34,10 @@ public class ClinicaSaracura {
 		DiaAtendimento da1 = new DiaAtendimento();
 		DiaAtendimento da2 = new DiaAtendimento();
 		DiaAtendimento da3 = new DiaAtendimento();
+		DiaAtendimento da4 = new DiaAtendimento();
+		DiaAtendimento da5 = new DiaAtendimento();
+		DiaAtendimento da6 = new DiaAtendimento();
+		DiaAtendimento da7 = new DiaAtendimento();
 		Medico m1 = new Medico();
 		Medico m2 = new Medico();
 		AgendaMedica am1 = new AgendaMedica();
@@ -67,6 +71,18 @@ public class ClinicaSaracura {
 		da3.setIdDia(3);
 		da3.setNomeDia("Terça-feira");
 		
+		da4.setIdDia(4);
+		da4.setNomeDia("Quarta-feira");
+		
+		da5.setIdDia(5);
+		da5.setNomeDia("Quinta-feira");
+		
+		da6.setIdDia(6);
+		da6.setNomeDia("Sexta-feira");
+		
+		da7.setIdDia(7);
+		da7.setNomeDia("Sabado");
+		
 		List<DiaAtendimento> das = new ArrayList<>();
 		das.addAll(Arrays.asList(da1, da2, da3));
 		
@@ -90,20 +106,27 @@ public class ClinicaSaracura {
 		
 		am1.setDiaAgendamento(new Date());
 		am1.setMedico(m1);
-		am1.setPaciente(PacienteDAO.getInstance().getById(8600));
+		
 		
 		//Persist
-//		ConvenioDAO.getInstance().persist(c1);
-//		ConvenioDAO.getInstance().persist(c2);
-//		PacienteDAO.getInstance().persist(p1);
-//		PacienteDAO.getInstance().persist(p2);
-//		EspecialidadeDAO.getInstance().persist(ep1);
-//		EspecialidadeDAO.getInstance().persist(ep2);
-//		DiaAtendimentoDAO.getInstance().persist(da1);
-//		DiaAtendimentoDAO.getInstance().persist(da2);
-//		DiaAtendimentoDAO.getInstance().persist(da3);
-//		MedicoDAO.getInstance().persist(m1);
-//		MedicoDAO.getInstance().persist(m2);
+		ConvenioDAO.getInstance().persist(c1);
+		ConvenioDAO.getInstance().persist(c2);
+		
+		PacienteDAO.getInstance().persist(p1);
+		am1.setPaciente(p1);
+		
+		PacienteDAO.getInstance().persist(p2);
+		EspecialidadeDAO.getInstance().persist(ep1);
+		EspecialidadeDAO.getInstance().persist(ep2);
+		DiaAtendimentoDAO.getInstance().persist(da1);
+		DiaAtendimentoDAO.getInstance().persist(da2);
+		DiaAtendimentoDAO.getInstance().persist(da3);
+		DiaAtendimentoDAO.getInstance().persist(da4);
+		DiaAtendimentoDAO.getInstance().persist(da5);
+		DiaAtendimentoDAO.getInstance().persist(da6);
+		DiaAtendimentoDAO.getInstance().persist(da7);
+		MedicoDAO.getInstance().persist(m1);
+		MedicoDAO.getInstance().persist(m2);
 		AgendaMedicaDAO.getInstance().persist(am1);
 	}
 

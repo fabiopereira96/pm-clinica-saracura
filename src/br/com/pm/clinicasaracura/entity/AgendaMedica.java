@@ -19,7 +19,6 @@ public class AgendaMedica implements Serializable {
 
 	@Id
 	@Basic(optional = false)
-	@Column(name = "diaAgendamento", insertable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date diaAgendamento;
 
