@@ -1,0 +1,16 @@
+/Users/fabiopereira/dev/pm-clinica-saracura/src/br/com/pm/clinicasaracura/entity/TipoExame.java
+/Users/fabiopereira/dev/pm-clinica-saracura/src/br/com/pm/clinicasaracura/dao/AgendaMedicaDAO.java
+/Users/fabiopereira/dev/pm-clinica-saracura/src/br/com/pm/clinicasaracura/dao/MedicoDAO.java
+/Users/fabiopereira/dev/pm-clinica-saracura/src/br/com/pm/clinicasaracura/entity/Especialidade.java
+/Users/fabiopereira/dev/pm-clinica-saracura/src/br/com/pm/clinicasaracura/dao/EspecialidadeDAO.java
+/Users/fabiopereira/dev/pm-clinica-saracura/src/br/com/pm/clinicasaracura/entity/Paciente.java
+/Users/fabiopereira/dev/pm-clinica-saracura/src/br/com/pm/clinicasaracura/entity/AgendaEquipamento.java
+/Users/fabiopereira/dev/pm-clinica-saracura/src/br/com/pm/clinicasaracura/entity/Medico.java
+/Users/fabiopereira/dev/pm-clinica-saracura/src/br/com/pm/clinicasaracura/dao/ConvenioDAO.java
+/Users/fabiopereira/dev/pm-clinica-saracura/src/br/com/pm/clinicasaracura/entity/DiaAtendimento.java
+/Users/fabiopereira/dev/pm-clinica-saracura/src/br/com/pm/clinicasaracura/dao/PacienteDAO.java
+/Users/fabiopereira/dev/pm-clinica-saracura/src/br/com/pm/clinicasaracura/entity/Convenio.java
+/Users/fabiopereira/dev/pm-clinica-saracura/src/br/com/pm/clinicasaracura/ClinicaSaracura.java
+/Users/fabiopereira/dev/pm-clinica-saracura/src/br/com/pm/clinicasaracura/entity/AgendaMedica.java
+/Users/fabiopereira/dev/pm-clinica-saracura/src/br/com/pm/clinicasaracura/dao/DiaAtendimentoDAO.java
+/Users/fabiopereira/dev/pm-clinica-saracura/src/br/com/pm/clinicasaracura/entity/Equipamento.java
