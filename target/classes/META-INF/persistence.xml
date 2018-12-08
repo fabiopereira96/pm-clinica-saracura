@@ -13,8 +13,8 @@
 			<property name="javax.persistence.jdbc.driver"
 				value="com.mysql.jdbc.Driver" />
 			<property name="javax.persistence.jdbc.url"
-				value="jdbc:mysql://localhost:3306/pm-clinica-saracura" />
-			<property name="javax.persistence.jdbc.user" value="root" />
+				value="jdbc:mysql://localhost:3306/pm_clinica_saracura" />
+			<property name="javax.persistence.jdbc.user" value="root" ></property>
 			<property name="javax.persistence.jdbc.password" value="" />
 
 			<property name="hibernate.show_sql" value="true" />

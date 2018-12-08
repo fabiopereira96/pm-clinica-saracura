@@ -22,9 +22,9 @@ import br.com.pm.clinicasaracura.entity.Paciente;
 
 public class ClinicaSaracura {
 
-	public static void main(String[] args) throws ParseException {
+	public static void runTest() throws ParseException {
+		System.out.println("oi");
 		//Testes de carga
-		
 		Paciente p1 = new Paciente();
 		Paciente p2 = new Paciente();
 		Convenio c1 = new Convenio();

@@ -1,5 +1,6 @@
 package br.com.pm.clinicasaracura.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -42,6 +43,19 @@ public class EspecialidadeDAO {
 	public List<Especialidade> findAll() {
 		return entityManager.createQuery("FROM " + Especialidade.class.getName()).getResultList();
 	}
+	
+	@SuppressWarnings("unchecked")
+	public String[] getNames() {
+		List<Especialidade> rows = entityManager.createQuery("FROM " + Especialidade.class.getName()).getResultList();
+		
+		List<String> result = new ArrayList<>(rows.size());
+		for (Especialidade row : rows) {
+		    result.add(row.getNome());
+		}
+		
+		return result.toArray(new String[0]);
+	}
+	
 
 	public void persist(Especialidade especialidade) {
 		try {

@@ -1,11 +1,13 @@
 package br.com.pm.clinicasaracura.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import br.com.pm.clinicasaracura.entity.Especialidade;
 import br.com.pm.clinicasaracura.entity.Medico;
 
 public class MedicoDAO {
@@ -82,6 +84,31 @@ public class MedicoDAO {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String[] getNames() {
+		List<Medico> rows = entityManager.createQuery("FROM " + Medico.class.getName()).getResultList();
+		
+		List<String> result = new ArrayList<>(rows.size());
+		for (Medico row : rows) {
+		    result.add(row.getNome());
+		}
+		
+		return result.toArray(new String[0]);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String[] getNamesByEspecialidade(final int idEspecialidade) {
+		List<Medico> rows = entityManager.createQuery("FROM " + Medico.class.getName() 
+				+ " WHERE idEspecialidade = " + idEspecialidade ).getResultList();
+		
+		List<String> result = new ArrayList<>(rows.size());
+		for (Medico row : rows) {
+		    result.add(row.getNome());
+		}
+		
+		return result.toArray(new String[0]);
 	}
 
 }
