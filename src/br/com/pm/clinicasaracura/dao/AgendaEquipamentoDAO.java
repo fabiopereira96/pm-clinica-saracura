@@ -7,21 +7,21 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import br.com.pm.clinicasaracura.entity.AgendaMedica;
+import br.com.pm.clinicasaracura.entity.AgendaEquipamento;
 
-public class AgendaMedicaDAO {
+public class AgendaEquipamentoDAO {
 
-	private static AgendaMedicaDAO instance;
+	private static AgendaEquipamentoDAO instance;
 	protected EntityManager entityManager;
 
-	public static AgendaMedicaDAO getInstance() {
+	public static AgendaEquipamentoDAO getInstance() {
 		if (instance == null) {
-			instance = new AgendaMedicaDAO();
+			instance = new AgendaEquipamentoDAO();
 		}
 		return instance;
 	}
 
-	private AgendaMedicaDAO() {
+	private AgendaEquipamentoDAO() {
 		entityManager = getEntityManager();
 	}
 
@@ -30,19 +30,20 @@ public class AgendaMedicaDAO {
 		if (entityManager == null) {
 			entityManager = factory.createEntityManager();
 		}
+
 		return entityManager;
 	}
 
-	public AgendaMedica getByDate(final Date date) {
-		return entityManager.find(AgendaMedica.class, date);
+	public AgendaEquipamento getByDate(final Date date) {
+		return entityManager.find(AgendaEquipamento.class, date);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<AgendaMedica> findAll() {
-		return entityManager.createQuery("FROM " + AgendaMedica.class.getName()).getResultList();
+	public List<AgendaEquipamento> findAll() {
+		return entityManager.createQuery("FROM " + AgendaEquipamento.class.getName()).getResultList();
 	}
 
-	public void persist(AgendaMedica agenda) {
+	public void persist(AgendaEquipamento agenda) {
 		try {
 			entityManager.getTransaction().begin();
 			entityManager.persist(agenda);
@@ -53,7 +54,7 @@ public class AgendaMedicaDAO {
 		}
 	}
 
-	public void merge(AgendaMedica agenda) {
+	public void merge(AgendaEquipamento agenda) {
 		try {
 			entityManager.getTransaction().begin();
 			entityManager.merge(agenda);
@@ -64,10 +65,10 @@ public class AgendaMedicaDAO {
 		}
 	}
 
-	public void remove(AgendaMedica agenda) {
+	public void remove(AgendaEquipamento agenda) {
 		try {
 			entityManager.getTransaction().begin();
-			agenda = entityManager.find(AgendaMedica.class, agenda.getDiaAgendamento());
+			agenda = entityManager.find(AgendaEquipamento.class, agenda.getDataAgendamento());
 			entityManager.remove(agenda);
 			entityManager.getTransaction().commit();
 		} catch (Exception ex) {
@@ -78,11 +79,10 @@ public class AgendaMedicaDAO {
 
 	public void removeByDate(final Date date) {
 		try {
-			AgendaMedica agenda = getByDate(date);
+			AgendaEquipamento agenda = getByDate(date);
 			remove(agenda);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
-
 }

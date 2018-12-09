@@ -7,7 +7,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import br.com.pm.clinicasaracura.entity.Especialidade;
 import br.com.pm.clinicasaracura.entity.Medico;
 
 public class MedicoDAO {
@@ -102,13 +101,8 @@ public class MedicoDAO {
 	public List<Medico> getNamesByEspecialidade(final int idEspecialidade) {
 		List<Medico> rows = entityManager.createQuery("FROM " + Medico.class.getName() 
 				+ " WHERE idEspecialidade = " + idEspecialidade ).getResultList();
-//		
-//		List<String> result = new ArrayList<>(rows.size());
-//		for (Medico row : rows) {
-//		    result.add(row.getNome());
-//		}
+
 		return rows;
-//		return result.toArray(new String[0]);
 	}
 	
 	public int getCrmByName (final String nome) {
