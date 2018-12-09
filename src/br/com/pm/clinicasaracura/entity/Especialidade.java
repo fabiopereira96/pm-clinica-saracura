@@ -46,4 +46,8 @@ public class Especialidade implements Serializable {
 		this.nome = nome;
 	}
 
+	@Override
+	public String toString() {
+		return idEspecialidade + " - " + nome;
+	}
 }

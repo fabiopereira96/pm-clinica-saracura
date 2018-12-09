@@ -99,16 +99,16 @@ public class MedicoDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public String[] getNamesByEspecialidade(final int idEspecialidade) {
+	public List<Medico> getNamesByEspecialidade(final int idEspecialidade) {
 		List<Medico> rows = entityManager.createQuery("FROM " + Medico.class.getName() 
 				+ " WHERE idEspecialidade = " + idEspecialidade ).getResultList();
-		
-		List<String> result = new ArrayList<>(rows.size());
-		for (Medico row : rows) {
-		    result.add(row.getNome());
-		}
-		
-		return result.toArray(new String[0]);
+//		
+//		List<String> result = new ArrayList<>(rows.size());
+//		for (Medico row : rows) {
+//		    result.add(row.getNome());
+//		}
+		return rows;
+//		return result.toArray(new String[0]);
 	}
 	
 	public int getCrmByName (final String nome) {

@@ -109,4 +109,8 @@ public class Paciente implements Serializable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return idPaciente + " - " + nome;
+	}
 }

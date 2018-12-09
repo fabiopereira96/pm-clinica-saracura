@@ -1,10 +1,7 @@
 package br.com.pm.clinicasaracura;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JList;
-import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -12,7 +9,6 @@ import javax.swing.JLabel;
 import br.com.pm.clinicasaracura.dao.*;
 import br.com.pm.clinicasaracura.entity.*;
 import java.util.*;
-import javax.swing.DropMode;
 import javax.swing.JScrollPane;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -59,14 +55,9 @@ public class EspecialidadesWindow {
 		scrollPane_1.setBounds(12, 63, 416, 159);
 		frame.getContentPane().add(scrollPane_1);
 		
-		// Lista de especialidades
-		DefaultListModel especialidadesListModel = new DefaultListModel();
 		List<Especialidade> rows = EspecialidadeDAO.getInstance().findAll();
 		
-		for (Especialidade row : rows) {
-		    especialidadesListModel.addElement(row.getNome());
-		}
-		JList especialidadesList = new JList(especialidadesListModel);
+		JList especialidadesList = new JList(rows.toArray());
 		especialidadesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane_1.setViewportView(especialidadesList);
 		especialidadesList.setDragEnabled(true);
@@ -85,18 +76,20 @@ public class EspecialidadesWindow {
 					selecionarButton.setEnabled(false);
 					selecioneLabel.setText("Selecione um médico.");
 					
+					Especialidade especialidadeSelected = (Especialidade) especialidadesList.getSelectedValue();
+					
 					DefaultListModel medicoListModel = new DefaultListModel();
-					String[] rows = MedicoDAO.getInstance().getNamesByEspecialidade(especialidadesList.getSelectedIndex()+1);
+					List<Medico> rows = MedicoDAO.getInstance().getNamesByEspecialidade(especialidadeSelected.getIdEspecialidade());
 
-					for (String row : rows) {
+					for (Medico row : rows) {
 						medicoListModel.addElement(row);
 					}
 					
 					especialidadesList.setModel(medicoListModel);
 				} else if (mode == 1) {
-					int crmMedico = MedicoDAO.getInstance().getCrmByName(especialidadesList.getSelectedValue().toString());
-					agendamentoWindow.setVisible(true, crmMedico);
-					System.out.print(crmMedico);
+					Medico medico = (Medico) especialidadesList.getSelectedValue();
+					agendamentoWindow.setVisible(true, medico.getCrm());
+					System.out.print(medico.getCrm());
 				}
 			}
 				

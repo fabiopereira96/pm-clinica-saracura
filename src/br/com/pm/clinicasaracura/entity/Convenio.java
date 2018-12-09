@@ -70,4 +70,8 @@ public class Convenio implements Serializable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return idConvenio + " - " + nome;
+	}
 }
