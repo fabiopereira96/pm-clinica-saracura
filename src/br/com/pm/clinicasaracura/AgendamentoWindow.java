@@ -18,6 +18,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class AgendamentoWindow {
 
@@ -26,6 +30,9 @@ public class AgendamentoWindow {
 	private JTextField telefoneTxtField;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JTextField matriculaTxtField;
+	private final ButtonGroup buttonGroup_1 = new ButtonGroup();
+	
+	private int crmMedico;
 
 	/**
 	 * Launch the application.
@@ -54,9 +61,11 @@ public class AgendamentoWindow {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		crmMedico = -1;
+		
 		frame = new JFrame();
 		frame.setResizable(false);
-		frame.setBounds(100, 100, 536, 381);
+		frame.setBounds(100, 100, 535, 409);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -72,21 +81,25 @@ public class AgendamentoWindow {
 		particularPanel.add(lblNewLabel_6);
 		
 		JRadioButton chequeRadio = new JRadioButton("Cheque");
+		buttonGroup_1.add(chequeRadio);
 		chequeRadio.setFont(new Font("Dialog", Font.BOLD, 11));
 		chequeRadio.setBounds(8, 35, 149, 23);
 		particularPanel.add(chequeRadio);
 		
 		JRadioButton creditoRadio = new JRadioButton("Crédito");
+		buttonGroup_1.add(creditoRadio);
 		creditoRadio.setFont(new Font("Dialog", Font.BOLD, 11));
 		creditoRadio.setBounds(8, 62, 149, 23);
 		particularPanel.add(creditoRadio);
 		
 		JRadioButton debitoRadio = new JRadioButton("Débito");
+		buttonGroup_1.add(debitoRadio);
 		debitoRadio.setFont(new Font("Dialog", Font.BOLD, 11));
 		debitoRadio.setBounds(8, 89, 149, 23);
 		particularPanel.add(debitoRadio);
 		
 		JRadioButton dinheiroRadio = new JRadioButton("Dinheiro");
+		buttonGroup_1.add(dinheiroRadio);
 		dinheiroRadio.setFont(new Font("Dialog", Font.BOLD, 11));
 		dinheiroRadio.setBounds(8, 116, 149, 23);
 		particularPanel.add(dinheiroRadio);
@@ -119,6 +132,12 @@ public class AgendamentoWindow {
 		matriculaTxtField.setColumns(10);
 		
 		JCalendar calendar = new JCalendar();
+		calendar.getDayChooser().getDayPanel().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+			}
+		});
 		calendar.setBounds(12, 34, 223, 138);
 		frame.getContentPane().add(calendar);
 		
@@ -160,15 +179,50 @@ public class AgendamentoWindow {
 		frame.getContentPane().add(lblNewLabel_3);
 		
 		JRadioButton convenioRadio = new JRadioButton("Convênio");
+		convenioRadio.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (convenioRadio.isSelected()) {
+					convenioPanel.setVisible(true);
+					particularPanel.setVisible(false);
+				}
+			}
+		});
 		convenioRadio.setFont(new Font("Dialog", Font.BOLD, 11));
 		buttonGroup.add(convenioRadio);
 		convenioRadio.setBounds(243, 160, 90, 23);
 		frame.getContentPane().add(convenioRadio);
 		
 		JRadioButton particularRadio = new JRadioButton("Particular");
+		particularRadio.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(particularRadio.isSelected()) {
+					particularPanel.setVisible(true);
+					convenioPanel.setVisible(false);
+				}
+			}
+		});
 		particularRadio.setFont(new Font("Dialog", Font.BOLD, 11));
 		buttonGroup.add(particularRadio);
 		particularRadio.setBounds(375, 160, 149, 23);
 		frame.getContentPane().add(particularRadio);
+		
+		JButton voltarButton = new JButton("Voltar");
+		voltarButton.setBounds(12, 354, 117, 25);
+		frame.getContentPane().add(voltarButton);
+		
+		JButton agendarButton = new JButton("Agendar");
+		agendarButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		agendarButton.setBounds(403, 354, 117, 25);
+		frame.getContentPane().add(agendarButton);
+	}
+	
+	public void setVisible(boolean t, final int crmMedico) {
+		this.crmMedico = crmMedico; 
+		frame.setVisible(t);
 	}
 }

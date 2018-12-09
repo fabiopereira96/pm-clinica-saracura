@@ -26,6 +26,7 @@ public class EspecialidadesWindow {
 	
 	/* My vars IM SOOO CONFUSED MANN*/
 	private int mode; // 0 - Especialidades, 1 - Medicos
+	private static AgendamentoWindow agendamentoWindow = new AgendamentoWindow();
 	
 	/**
 	 * Create the application.
@@ -93,7 +94,9 @@ public class EspecialidadesWindow {
 					
 					especialidadesList.setModel(medicoListModel);
 				} else if (mode == 1) {
-					// Abre a agenda
+					int crmMedico = MedicoDAO.getInstance().getCrmByName(especialidadesList.getSelectedValue().toString());
+					agendamentoWindow.setVisible(true, crmMedico);
+					System.out.print(crmMedico);
 				}
 			}
 				

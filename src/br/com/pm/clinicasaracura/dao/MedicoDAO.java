@@ -110,5 +110,9 @@ public class MedicoDAO {
 		
 		return result.toArray(new String[0]);
 	}
-
+	
+	public int getCrmByName (final String nome) {
+		List<Medico> rows = entityManager.createQuery ("FROM " + Medico.class.getName() + " WHERE nome = '" + nome + "'").getResultList();
+		return rows.get(0).getCrm();
+	}
 }
