@@ -16,19 +16,18 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 
-public class EspecialidadesWindow {
+public class AtualizacaoWindow {
 
 	private JFrame frame;
 	
 	/* My vars IM SOOO CONFUSED MANN*/
 	private int mode; // 0 - Especialidades, 1 - Medicos
 	private static AgendamentoWindow agendamentoWindow = new AgendamentoWindow();
-	private int nAgendamentos;
 	
 	/**
 	 * Create the application.
 	 */
-	public EspecialidadesWindow() {
+	public AtualizacaoWindow() {
 		initialize();
 	}
 
@@ -52,21 +51,6 @@ public class EspecialidadesWindow {
 			}
 		});
 		voltarButton.setBounds(12, 234, 117, 25);
-		voltarButton.addMouseListener(new MouseAdapter() {
-		   @Override
-		   public void mouseReleased(MouseEvent e) {
-		   try {
-			   if(mode == 1) {
-				   frame.dispose();
-			       initialize();
-			       setVisible(true, nAgendamentos);
-			   } else {
-				   setVisible(false, nAgendamentos);
-				   frame.dispose();
-			   }
-		   } catch (Exception f) {
-			     System.exit(0);
-		   }}});
 		frame.getContentPane().add(voltarButton);
 		
 		JLabel selecioneLabel = new JLabel("Selecione uma especialidade.");
@@ -87,6 +71,7 @@ public class EspecialidadesWindow {
 		JButton selecionarButton = new JButton("Selecionar");
 		selecionarButton.setEnabled(false);
 		selecionarButton.addMouseListener(new MouseAdapter() {
+			@SuppressWarnings({ "rawtypes", "serial", "unchecked" })
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(!selecionarButton.isEnabled()) {
@@ -109,7 +94,8 @@ public class EspecialidadesWindow {
 					especialidadesList.setModel(medicoListModel);
 				} else if (mode == 1) {
 					Medico medico = (Medico) especialidadesList.getSelectedValue();
-					agendamentoWindow.setVisible(true, medico.getCrm(), nAgendamentos);
+					agendamentoWindow.setVisible(true, medico.getCrm());
+					System.out.print(medico.getCrm());
 				}
 			}
 				
@@ -124,8 +110,7 @@ public class EspecialidadesWindow {
 		});
 	}
 	
-	public void setVisible(boolean t, final int nAgendamentos) {
+	public void setVisible(boolean t) {
 		frame.setVisible(t);
-		this.nAgendamentos = nAgendamentos;
 	}
 }

@@ -121,7 +121,7 @@ public class AgendamentoWindow {
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.setBounds(100, 100, 535, 409);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JPanel particularPanel = new JPanel();
@@ -317,7 +317,11 @@ public class AgendamentoWindow {
 		JButton voltarButton = new JButton("Voltar");
 		voltarButton.addMouseListener(new MouseAdapter() {
 			@Override
+<<<<<<< HEAD
 			public void mouseClicked(MouseEvent e) {
+=======
+			public void mouseReleased(MouseEvent e) {
+>>>>>>> 9bf9074dff03b15438b8b65e08dc8e358a0418f6
 				frame.dispose();
 			}
 		});
