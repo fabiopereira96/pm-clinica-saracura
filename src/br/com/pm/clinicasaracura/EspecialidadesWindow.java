@@ -71,7 +71,6 @@ public class EspecialidadesWindow {
 		JButton selecionarButton = new JButton("Selecionar");
 		selecionarButton.setEnabled(false);
 		selecionarButton.addMouseListener(new MouseAdapter() {
-			@SuppressWarnings({ "rawtypes", "serial", "unchecked" })
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(!selecionarButton.isEnabled()) {

@@ -36,7 +36,12 @@ public class EquipamentoDAO {
 	public Equipamento getById(final int id) {
 		return entityManager.find(Equipamento.class, id);
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	public List<Equipamento> findByExamId(final int id) {
+		return entityManager.createQuery("FROM " + Equipamento.class.getName() + " WHERE idTipoExame = " + id).getResultList();
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<Equipamento> findAll() {
 		return entityManager.createQuery("FROM " + Equipamento.class.getName()).getResultList();
