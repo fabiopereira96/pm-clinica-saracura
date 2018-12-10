@@ -23,7 +23,6 @@ public class EspecialidadesWindow {
 	/* My vars IM SOOO CONFUSED MANN*/
 	private int mode; // 0 - Especialidades, 1 - Medicos
 	private static AgendamentoWindow agendamentoWindow = new AgendamentoWindow();
-	private int nAgendamentos;
 	
 	/**
 	 * Create the application.
@@ -59,9 +58,9 @@ public class EspecialidadesWindow {
 			   if(mode == 1) {
 				   frame.dispose();
 			       initialize();
-			       setVisible(true, nAgendamentos);
+			       setVisible(true);
 			   } else {
-				   setVisible(false, nAgendamentos);
+				   setVisible(false);
 				   frame.dispose();
 			   }
 		   } catch (Exception f) {
@@ -109,7 +108,7 @@ public class EspecialidadesWindow {
 					especialidadesList.setModel(medicoListModel);
 				} else if (mode == 1) {
 					Medico medico = (Medico) especialidadesList.getSelectedValue();
-					agendamentoWindow.setVisible(true, medico.getCrm(), nAgendamentos);
+					agendamentoWindow.setVisible(true, medico.getCrm());
 				}
 			}
 				
@@ -124,8 +123,7 @@ public class EspecialidadesWindow {
 		});
 	}
 	
-	public void setVisible(boolean t, final int nAgendamentos) {
+	public void setVisible(boolean t) {
 		frame.setVisible(t);
-		this.nAgendamentos = nAgendamentos;
 	}
 }

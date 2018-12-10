@@ -43,22 +43,6 @@ public class AgendamentoExameWindow {
 	private final ButtonGroup buttonGroup_1 = new ButtonGroup();
 	private int tipoExame;
 	private JScrollPane scrollPane;
-	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AgendamentoExameWindow window = new AgendamentoExameWindow();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the application.

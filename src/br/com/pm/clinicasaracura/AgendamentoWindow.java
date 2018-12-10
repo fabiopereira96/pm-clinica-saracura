@@ -49,7 +49,6 @@ public class AgendamentoWindow {
 	private final ButtonGroup buttonGroup_1 = new ButtonGroup();
 	
 	private int crmMedico;
-	private int nAgendamentos;
 	
 	// The standard methods DON'T WORK
 	private boolean datesAreEqual(Date a, Date b) {
@@ -316,12 +315,7 @@ public class AgendamentoWindow {
 		
 		JButton voltarButton = new JButton("Voltar");
 		voltarButton.addMouseListener(new MouseAdapter() {
-			@Override
-<<<<<<< HEAD
 			public void mouseClicked(MouseEvent e) {
-=======
-			public void mouseReleased(MouseEvent e) {
->>>>>>> 9bf9074dff03b15438b8b65e08dc8e358a0418f6
 				frame.dispose();
 			}
 		});
@@ -373,9 +367,8 @@ public class AgendamentoWindow {
 		frame.getContentPane().add(lblNewLabel_1);
 	}
 	
-	public void setVisible(boolean t, final int crmMedico, final int nAgendamentos) {
+	public void setVisible(boolean t, final int crmMedico) {
 		this.crmMedico     = crmMedico; 
-		this.nAgendamentos = nAgendamentos;
 		frame.setVisible(t);
 	}
 }

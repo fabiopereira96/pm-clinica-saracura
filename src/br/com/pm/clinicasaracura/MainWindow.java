@@ -66,7 +66,7 @@ public class MainWindow {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				try {
-					especialidadesWindow.setVisible(true, nAgendamentos);
+					especialidadesWindow.setVisible(true);
 				} catch (Exception f) {
 					System.exit(0);
 				}
