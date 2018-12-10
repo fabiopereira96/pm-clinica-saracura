@@ -1,6 +1,8 @@
 package br.com.pm.clinicasaracura;
 
 import java.awt.EventQueue;
+import java.util.Date;
+import java.util.Calendar;
 
 import javax.swing.JFrame;
 import javax.swing.JTextField;
@@ -12,9 +14,11 @@ import java.beans.PropertyChangeListener;
 
 import br.com.pm.clinicasaracura.dao.ConvenioDAO;
 import br.com.pm.clinicasaracura.dao.PacienteDAO;
+import br.com.pm.clinicasaracura.dao.AgendaEquipamentoDAO;
 import br.com.pm.clinicasaracura.dao.EquipamentoDAO;
 import br.com.pm.clinicasaracura.entity.Convenio;
 import br.com.pm.clinicasaracura.entity.Paciente;
+import br.com.pm.clinicasaracura.entity.AgendaEquipamento;
 import br.com.pm.clinicasaracura.entity.Equipamento;
 
 import com.toedter.calendar.JCalendar;
@@ -41,9 +45,11 @@ public class AgendamentoExameWindow {
 	private JTextField telefoneTxtField;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private final ButtonGroup buttonGroup_1 = new ButtonGroup();
+	private Date chosenDate;
 	private int tipoExame;
 	private JScrollPane scrollPane;
-
+	private List<Equipamento> equips;
+	
 	/**
 	 * Create the application.
 	 */
@@ -116,8 +122,36 @@ public class AgendamentoExameWindow {
 		JCalendar calendar = new JCalendar();
 		calendar.getDayChooser().addPropertyChangeListener(new PropertyChangeListener() {
 		    public void propertyChange(PropertyChangeEvent evt) {
-				// @todo Atualizar as agendas de todos os aparelhos disponíveis para o tipo de exame p/ o novo dia.
-				// @todo (após verificar conflitos)
+		    	chosenDate = calendar.getDate();
+		    	
+		    	DefaultListModel horariosModel = new DefaultListModel();
+		    	
+				String[] minsPossiveis = new String[] {"00", "20", "40"};
+				for (int hora = 7; hora < 20; hora++) {
+					for (int m = 0; m < 3; m++) {
+						for (Equipamento equip : equips) {
+							if (equip.getStatusFuncionamento()) {
+						        Calendar cal = Calendar.getInstance();
+						        cal.setTime(chosenDate);
+						        cal.set(Calendar.HOUR_OF_DAY, hora);
+						        cal.set(Calendar.MINUTE, m*20);
+						        cal.set(Calendar.SECOND, 0);
+						        cal.set(Calendar.MILLISECOND, 0);
+						        Date finalDate = cal.getTime();
+						        
+								AgendaEquipamento agenda = AgendaEquipamentoDAO.getInstance().getByDate(finalDate);
+								if (agenda == null) {
+									horariosModel.addElement(hora + ":" + minsPossiveis[m] + " - " + equip);
+								}
+							}
+						}
+					}
+				}
+				
+				JList horariosList = new JList();
+				horariosList.setModel(horariosModel);
+				
+				scrollPane.setViewportView(horariosList);
 		    }
 		});
 		calendar.setBounds(12, 34, 223, 138);
@@ -208,24 +242,6 @@ public class AgendamentoExameWindow {
 	
 	public void setTipoExame(int tipo) {
 		this.tipoExame = tipo;
-		
-		List<Equipamento> equips = EquipamentoDAO.getInstance().findByExamId(this.tipoExame);
-		DefaultListModel horariosModel = new DefaultListModel();
-	
-		String[] minsPossiveis = new String[] {"00", "20", "40"};
-		for (int hora = 7; hora < 20; hora++) {
-			for (int m = 0; m < 3; m++) {
-				for (Equipamento equip : equips) {
-					if (equip.getStatusFuncionamento()) {
-						horariosModel.addElement(hora + ":" + minsPossiveis[m] + " - " + equip);
-					}
-				}
-			}
-		}
-		
-		JList horariosList = new JList();
-		horariosList.setModel(horariosModel);
-		
-		scrollPane.setViewportView(horariosList);
+		this.equips = EquipamentoDAO.getInstance().findByExamId(this.tipoExame);
 	}
 }

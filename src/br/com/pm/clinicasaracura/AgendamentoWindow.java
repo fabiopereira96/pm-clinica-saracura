@@ -94,7 +94,7 @@ public class AgendamentoWindow {
 		
 		return dayid;
 	}
-	
+
 	private boolean thisHorarioIsFree (List<AgendaMedica> agenda, Date horario) {
 		for (AgendaMedica a : agenda) {
 			if(datesAreEqual(horario, a.getDiaAgendamento()))
