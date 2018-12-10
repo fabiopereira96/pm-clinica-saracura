@@ -71,7 +71,7 @@ public class AgendamentoWindow {
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.setBounds(100, 100, 535, 409);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		JPanel particularPanel = new JPanel();
@@ -224,6 +224,12 @@ public class AgendamentoWindow {
 		frame.getContentPane().add(particularRadio);
 		
 		JButton voltarButton = new JButton("Voltar");
+		voltarButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				frame.dispose();
+			}
+		});
 		voltarButton.setBounds(12, 354, 117, 25);
 		frame.getContentPane().add(voltarButton);
 		

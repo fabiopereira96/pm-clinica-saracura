@@ -20,7 +20,9 @@ public class MainWindow {
 	private JFrame frame;
 	private static MainWindow mainWindow = new MainWindow();
 	private static EspecialidadesWindow especialidadesWindow = new EspecialidadesWindow();
-
+	private static AtualizacaoWindow atualizacaoWindow = new AtualizacaoWindow();
+	
+	
 	/**
 	 * Launch the application.
 	 */
@@ -72,10 +74,39 @@ public class MainWindow {
 		panel.add(agConsultaButton);
 		
 		JButton agExameImgButton = new JButton("Agendamento de Exame de Imagem");
+		agConsultaButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				try {
+					especialidadesWindow.setVisible(true);
+				} catch (Exception f) {
+					System.exit(0);
+				}
+			}
+		});
 		agExameImgButton.setBounds(12, 229, 472, 25);
 		panel.add(agExameImgButton);
-		
+		agConsultaButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				try {
+					especialidadesWindow.setVisible(true);
+				} catch (Exception f) {
+					System.exit(0);
+				}
+			}
+		});
 		JButton atualizacaoButton = new JButton("Atualização do Cadastro de Agendas");
+		atualizacaoButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				try {
+					atualizacaoWindow.setVisible(true);
+				} catch (Exception f) {
+					System.exit(0);
+				}
+			}
+		});
 		atualizacaoButton.setBounds(12, 266, 472, 25);
 		panel.add(atualizacaoButton);
 		

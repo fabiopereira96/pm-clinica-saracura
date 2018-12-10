@@ -16,7 +16,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 
-public class EspecialidadesWindow {
+public class AtualizacaoWindow {
 
 	private JFrame frame;
 	
@@ -27,7 +27,7 @@ public class EspecialidadesWindow {
 	/**
 	 * Create the application.
 	 */
-	public EspecialidadesWindow() {
+	public AtualizacaoWindow() {
 		initialize();
 	}
 
