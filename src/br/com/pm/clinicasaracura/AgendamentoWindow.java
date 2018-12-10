@@ -7,9 +7,14 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 import com.toedter.calendar.JDayChooser;
 
+import br.com.pm.clinicasaracura.dao.AgendaMedicaDAO;
 import br.com.pm.clinicasaracura.dao.ConvenioDAO;
+import br.com.pm.clinicasaracura.dao.MedicoDAO;
 import br.com.pm.clinicasaracura.dao.PacienteDAO;
+import br.com.pm.clinicasaracura.entity.AgendaMedica;
 import br.com.pm.clinicasaracura.entity.Convenio;
+import br.com.pm.clinicasaracura.entity.DiaAtendimento;
+import br.com.pm.clinicasaracura.entity.Medico;
 import br.com.pm.clinicasaracura.entity.Paciente;
 
 import com.toedter.calendar.JCalendar;
@@ -19,15 +24,19 @@ import java.awt.Font;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Date;
 import java.util.List;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 public class AgendamentoWindow {
 
@@ -38,23 +47,60 @@ public class AgendamentoWindow {
 	private final ButtonGroup buttonGroup_1 = new ButtonGroup();
 	
 	private int crmMedico;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AgendamentoWindow window = new AgendamentoWindow();
-					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	
+	// The standard methods DON'T WORK
+	private boolean datesAreEqual(Date a, Date b) {
+		if (  a.getDay() == b.getDay() 
+	       && a.getMonth() == b.getMonth()
+	       && a.getYear() == b.getYear()
+	       && a.getSeconds() == b.getSeconds()
+	       && a.getMinutes() == b.getMinutes()
+	       && a.getHours() == b.getHours())
+			return true;
+		
+		return false;
 	}
-
+	
+	private int getDayId(String date) {
+		String day = date.substring(0, 3);
+		int dayid = 0;
+		
+		switch (day) {
+			case "Sun" :
+				dayid = 1;
+				break;
+			case "Mon" :
+				dayid = 2;
+				break;
+			case "Tue" :
+				dayid = 3;
+				break;
+			case "Wed" :
+				dayid = 4;
+				break;
+			case "Thu" :
+				dayid = 5;
+				break;
+			case "Fri" :
+				dayid = 6;
+				break;
+			case "Sat" :
+				dayid = 7;
+				break;
+		}
+		
+		return dayid;
+	}
+	
+	private boolean thisHorarioIsFree (List<AgendaMedica> agenda, Date horario) {
+		for (AgendaMedica a : agenda) {
+			if(datesAreEqual(a.getDiaAgendamento(),horario))
+				return false;
+		}
+		
+		return true;
+	}
+	
 	/**
 	 * Create the application.
 	 */
@@ -132,23 +178,60 @@ public class AgendamentoWindow {
 		lblNewLabel_4.setFont(new Font("Dialog", Font.BOLD, 11));
 		lblNewLabel_4.setBounds(12, 12, 249, 15);
 		convenioPanel.add(lblNewLabel_4);
-		
-		JCalendar calendar = new JCalendar();
-		calendar.getDayChooser().getDayPanel().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
 				
-			}
-		});
-		calendar.setBounds(12, 34, 223, 138);
-		frame.getContentPane().add(calendar);
-		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 184, 223, 155);
+		scrollPane.setBounds(12, 208, 223, 131);
 		frame.getContentPane().add(scrollPane);
 		
 		JList horariosList = new JList();
 		scrollPane.setViewportView(horariosList);
+		
+		JCalendar calendar = new JCalendar();
+		calendar.getDayChooser().addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				boolean printHorarios = false;
+				int selectedDiaId = getDayId(calendar.getDate().toString());
+				Medico selectedMedico = MedicoDAO.getInstance().getById(crmMedico);
+				List<DiaAtendimento> diasAtendimentoList = selectedMedico.getDiaAtendimento();
+				int intervaloAtendimento = Integer.parseInt(selectedMedico.getIntervaloAtendimento().substring(3, 5));
+				int horarioAtendimentoHora   = Integer.parseInt(selectedMedico.getHorarioAtendimento().substring(0, 2));
+				int horarioAtendimentoMinuto = Integer.parseInt(selectedMedico.getHorarioAtendimento().substring(3, 5));
+
+				List<AgendaMedica> selectedMedicoAgenda = AgendaMedicaDAO.getInstance().getByMedico(crmMedico);
+				
+				for (DiaAtendimento d : diasAtendimentoList) {
+					if (d.getIdDia() == selectedDiaId) {
+						printHorarios = true;
+						break;
+					}
+				}
+				
+				if (printHorarios) {
+					Date compareDate = calendar.getDate();
+					
+					int currentHora = horarioAtendimentoHora;
+					int currentMin  = horarioAtendimentoMinuto;
+					
+					DefaultListModel listModel = new DefaultListModel();
+														
+					for (int i = 0; (i*intervaloAtendimento) <= 360; i++) {
+						currentHora += (currentMin + intervaloAtendimento) / 60;
+						currentMin = (horarioAtendimentoMinuto + i*intervaloAtendimento) % 60;
+						
+						compareDate.setHours(currentHora);
+						compareDate.setMinutes(currentMin);
+						compareDate.setSeconds(0);
+						
+						if (thisHorarioIsFree(selectedMedicoAgenda, compareDate))
+							listModel.addElement(String.format("%02d", currentHora) + ":" + String.format("%02d", currentMin));
+					}
+					
+					horariosList.setModel(listModel);
+				}
+			}
+		});
+		calendar.setBounds(12, 34, 223, 138);
+		frame.getContentPane().add(calendar);
 		
 		JLabel lblNewLabel = new JLabel("Selecione uma data e um horário");
 		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 11));
@@ -234,6 +317,11 @@ public class AgendamentoWindow {
 		});
 		agendarButton.setBounds(403, 354, 117, 25);
 		frame.getContentPane().add(agendarButton);
+		
+		JLabel lblNewLabel_1 = new JLabel("Horários disponíveis");
+		lblNewLabel_1.setFont(new Font("Dialog", Font.BOLD, 11));
+		lblNewLabel_1.setBounds(12, 181, 217, 15);
+		frame.getContentPane().add(lblNewLabel_1);
 	}
 	
 	public void setVisible(boolean t, final int crmMedico) {

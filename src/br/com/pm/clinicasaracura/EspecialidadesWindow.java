@@ -45,6 +45,21 @@ public class EspecialidadesWindow {
 		
 		JButton voltarButton = new JButton("Voltar");
 		voltarButton.setBounds(12, 234, 117, 25);
+		voltarButton.addMouseListener(new MouseAdapter() {
+		   @Override
+		   public void mouseReleased(MouseEvent e) {
+		   try {
+			   if(mode == 1) {
+				   frame.dispose();
+			       initialize();
+			       setVisible(true);
+			   } else {
+				   setVisible(false);
+				   frame.dispose();
+			   }
+		   } catch (Exception f) {
+			     System.exit(0);
+		   }}});
 		frame.getContentPane().add(voltarButton);
 		
 		JLabel selecioneLabel = new JLabel("Selecione uma especialidade.");
@@ -89,7 +104,6 @@ public class EspecialidadesWindow {
 				} else if (mode == 1) {
 					Medico medico = (Medico) especialidadesList.getSelectedValue();
 					agendamentoWindow.setVisible(true, medico.getCrm());
-					System.out.print(medico.getCrm());
 				}
 			}
 				

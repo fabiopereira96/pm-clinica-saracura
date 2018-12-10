@@ -36,6 +36,10 @@ public class AgendaMedicaDAO {
 	public AgendaMedica getByDate(final Date date) {
 		return entityManager.find(AgendaMedica.class, date);
 	}
+	
+	public List<AgendaMedica> getByMedico(final int medicoCrm) {
+		return entityManager.createQuery("FROM " + AgendaMedica.class.getName() + " WHERE idMedico=" + medicoCrm).getResultList();
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<AgendaMedica> findAll() {
