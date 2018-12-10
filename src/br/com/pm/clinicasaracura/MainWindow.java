@@ -46,7 +46,7 @@ public class MainWindow {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-        /* Setup */
+		/* Setup */
 		frame = new JFrame();
 		frame.getContentPane().setSize(new Dimension(500, 300));
 		frame.setSize(new Dimension(500, 500));
@@ -57,7 +57,7 @@ public class MainWindow {
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
 
-        /* Agendamento de consulta */
+		/* Agendamento de consulta */
 		JButton agConsultaButton = new JButton("Agendamento de Consulta");
 		agConsultaButton.addMouseListener(new MouseAdapter() {
 			@Override
@@ -72,7 +72,7 @@ public class MainWindow {
 		agConsultaButton.setBounds(12, 192, 472, 25);
 		panel.add(agConsultaButton);
 
-        /* Agendamento de exame de imagem */
+		/* Agendamento de exame de imagem */
 		JButton agExameImgButton = new JButton("Agendamento de Exame de Imagem");
 
 		agExameImgButton.setBounds(12, 229, 472, 25);
@@ -88,7 +88,7 @@ public class MainWindow {
 		});
 		panel.add(agExameImgButton);
 
-        /* Atualização do cadastro de agendas */
+		/* Atualização do cadastro de agendas */
 		JButton atualizacaoButton = new JButton("Atualização do Cadastro de Agendas");
 		atualizacaoButton.addMouseListener(new MouseAdapter() {
 			@Override
@@ -103,7 +103,7 @@ public class MainWindow {
 		atualizacaoButton.setBounds(12, 266, 472, 25);
 		panel.add(atualizacaoButton);
 
-        /* Tela principal */
+		/* Tela principal */
 		JButton exitButton = new JButton("Sair");
 		exitButton.addMouseListener(new MouseAdapter() {
 			@Override
