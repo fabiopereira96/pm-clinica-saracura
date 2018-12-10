@@ -132,7 +132,8 @@ public class AgendamentoExameWindow {
 		JCalendar calendar = new JCalendar();
 		calendar.getDayChooser().addPropertyChangeListener(new PropertyChangeListener() {
 		    public void propertyChange(PropertyChangeEvent evt) {
-				// Mostrar as agendas de todos os aparelhos disponíveis para o tipo de exame.
+				// @todo Atualizar as agendas de todos os aparelhos disponíveis para o tipo de exame p/ o novo dia.
+				// @todo (após verificar conflitos)
 		    }
 		});
 		calendar.setBounds(12, 34, 223, 138);
