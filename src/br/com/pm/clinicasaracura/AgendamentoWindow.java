@@ -19,6 +19,8 @@ import br.com.pm.clinicasaracura.entity.Paciente;
 
 import com.toedter.calendar.JCalendar;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 
 import javax.swing.JRadioButton;
@@ -47,16 +49,18 @@ public class AgendamentoWindow {
 	private final ButtonGroup buttonGroup_1 = new ButtonGroup();
 	
 	private int crmMedico;
+	private int nAgendamentos;
 	
 	// The standard methods DON'T WORK
 	private boolean datesAreEqual(Date a, Date b) {
-		if (  a.getDay() == b.getDay() 
-	       && a.getMonth() == b.getMonth()
-	       && a.getYear() == b.getYear()
+		if (  a.getDate()     == b.getDate() 
+	       && a.getMonth()   == b.getMonth()
+	       && a.getYear()    == b.getYear()
 	       && a.getSeconds() == b.getSeconds()
 	       && a.getMinutes() == b.getMinutes()
-	       && a.getHours() == b.getHours())
+	       && a.getHours()   == b.getHours()) {
 			return true;
+		}
 		
 		return false;
 	}
@@ -94,7 +98,7 @@ public class AgendamentoWindow {
 	
 	private boolean thisHorarioIsFree (List<AgendaMedica> agenda, Date horario) {
 		for (AgendaMedica a : agenda) {
-			if(datesAreEqual(a.getDiaAgendamento(),horario))
+			if(datesAreEqual(horario, a.getDiaAgendamento()))
 				return false;
 		}
 		
@@ -208,7 +212,7 @@ public class AgendamentoWindow {
 				
 				if (printHorarios) {
 					Date compareDate = calendar.getDate();
-					
+									
 					int currentHora = horarioAtendimentoHora;
 					int currentMin  = horarioAtendimentoMinuto;
 					
@@ -226,6 +230,10 @@ public class AgendamentoWindow {
 							listModel.addElement(String.format("%02d", currentHora) + ":" + String.format("%02d", currentMin));
 					}
 					
+					horariosList.setModel(listModel);
+				}
+				else {
+					DefaultListModel listModel = new DefaultListModel();
 					horariosList.setModel(listModel);
 				}
 			}
@@ -307,10 +315,47 @@ public class AgendamentoWindow {
 		frame.getContentPane().add(particularRadio);
 		
 		JButton voltarButton = new JButton("Voltar");
+		voltarButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				frame.dispose();
+			}
+		});
 		voltarButton.setBounds(12, 354, 117, 25);
 		frame.getContentPane().add(voltarButton);
 		
 		JButton agendarButton = new JButton("Agendar");
+		agendarButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if( horariosList.isSelectionEmpty()
+			     || comboBoxPacientes.getSelectedItem().toString() == ""
+			     || (!convenioRadio.isSelected() && !particularRadio.isSelected())
+			     ) {
+					JOptionPane.showMessageDialog(null, "Selecione todos os campos!");
+					return;
+				}
+				
+				AgendaMedica agenda = new AgendaMedica();
+				
+				int horaAgendamento   = Integer.parseInt(horariosList.getSelectedValue().toString().substring(0,2));
+				int minutoAgendamento = Integer.parseInt(horariosList.getSelectedValue().toString().substring(3,5));
+				
+				Date diaAgendamento = calendar.getDate();
+				diaAgendamento.setHours(horaAgendamento);
+				diaAgendamento.setMinutes(minutoAgendamento);
+				diaAgendamento.setSeconds(0);
+				
+				agenda.setDiaAgendamento(diaAgendamento);
+				agenda.setMedico(MedicoDAO.getInstance().getById(crmMedico));
+				
+				agenda.setPaciente(PacienteDAO.getInstance().getById(Integer.parseInt(comboBoxPacientes.getSelectedItem().toString().split(" ")[0])));
+				
+				AgendaMedicaDAO.getInstance().persist(agenda);
+				JOptionPane.showMessageDialog(null, "Agendado!");
+				frame.dispose();
+			}
+		});
 		agendarButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
@@ -324,8 +369,9 @@ public class AgendamentoWindow {
 		frame.getContentPane().add(lblNewLabel_1);
 	}
 	
-	public void setVisible(boolean t, final int crmMedico) {
-		this.crmMedico = crmMedico; 
+	public void setVisible(boolean t, final int crmMedico, final int nAgendamentos) {
+		this.crmMedico     = crmMedico; 
+		this.nAgendamentos = nAgendamentos;
 		frame.setVisible(t);
 	}
 }

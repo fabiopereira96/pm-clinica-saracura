@@ -20,10 +20,12 @@ public class MainWindow {
 	private JFrame frame;
 	private static MainWindow mainWindow = new MainWindow();
 	private static EspecialidadesWindow especialidadesWindow = new EspecialidadesWindow();
+	
+	private int nAgendamentos = 0;
 
 	/**
 	 * Launch the application.
-	 */
+	*/
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -62,7 +64,7 @@ public class MainWindow {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				try {
-					especialidadesWindow.setVisible(true);
+					especialidadesWindow.setVisible(true, nAgendamentos);
 				} catch (Exception f) {
 					System.exit(0);
 				}
