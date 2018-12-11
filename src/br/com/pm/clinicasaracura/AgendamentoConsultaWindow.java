@@ -40,13 +40,15 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 
-public class AgendamentoWindow {
+public class AgendamentoConsultaWindow {
 
 	private JFrame frame;
 	private JTextField nomePacienteTxtField;
 	private JTextField telefoneTxtField;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private final ButtonGroup buttonGroup_1 = new ButtonGroup();
+	
+	private PagamentoWindow pagamentoWindow = new PagamentoWindow();
 	
 	private int crmMedico;
 	
@@ -107,7 +109,7 @@ public class AgendamentoWindow {
 	/**
 	 * Create the application.
 	 */
-	public AgendamentoWindow() {
+	public AgendamentoConsultaWindow() {
 		initialize();
 	}
 
@@ -333,12 +335,12 @@ public class AgendamentoWindow {
 					JOptionPane.showMessageDialog(null, "Selecione todos os campos!");
 					return;
 				}
-				
+		
 				AgendaMedica agenda = new AgendaMedica();
 				
 				int horaAgendamento   = Integer.parseInt(horariosList.getSelectedValue().toString().substring(0,2));
 				int minutoAgendamento = Integer.parseInt(horariosList.getSelectedValue().toString().substring(3,5));
-				
+			
 				Date diaAgendamento = calendar.getDate();
 				diaAgendamento.setHours(horaAgendamento);
 				diaAgendamento.setMinutes(minutoAgendamento);
@@ -346,14 +348,26 @@ public class AgendamentoWindow {
 				
 				agenda.setDiaAgendamento(diaAgendamento);
 				agenda.setMedico(MedicoDAO.getInstance().getById(crmMedico));
-				
+			
 				agenda.setPaciente(PacienteDAO.getInstance().getById(Integer.parseInt(comboBoxPacientes.getSelectedItem().toString().split(" ")[0])));
 				
-				AgendaMedicaDAO.getInstance().persist(agenda);
-				JOptionPane.showMessageDialog(null, "Agendado!");
+				int mode = -1; 
+				
+				if (chequeRadio.isSelected())
+					mode = 0;
+				else if (creditoRadio.isSelected())
+					mode = 1;
+				else if (debitoRadio.isSelected())
+					mode = 2;
+				else if (dinheiroRadio.isSelected())
+					mode = 3;
+				
+				pagamentoWindow.setVisible(true, mode, agenda);
+				
 				frame.dispose();
 			}
 		});
+		
 		agendarButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}

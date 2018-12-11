@@ -22,7 +22,7 @@ public class AtualizacaoWindow {
 	
 	/* My vars IM SOOO CONFUSED MANN*/
 	private int mode; // 0 - Especialidades, 1 - Medicos
-	private static AgendamentoWindow agendamentoWindow = new AgendamentoWindow();
+	private static AgendamentoConsultaWindow agendamentoWindow = new AgendamentoConsultaWindow();
 	
 	/**
 	 * Create the application.
