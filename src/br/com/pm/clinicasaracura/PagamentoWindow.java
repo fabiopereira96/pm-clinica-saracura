@@ -2,6 +2,7 @@ package br.com.pm.clinicasaracura;
 
 import java.awt.EventQueue;
 import java.util.Random;
+import javax.swing.Timer;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.JFrame;
@@ -19,6 +20,8 @@ import javax.swing.JProgressBar;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 import java.awt.Window.Type;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Color;
@@ -41,6 +44,9 @@ public class PagamentoWindow {
 	private JPanel debitoPanel  = new JPanel();
 	private JPanel chequePanel = new JPanel();
 	private JLabel lblProcessando = new JLabel("Processando...");
+	
+	private JComboBox mesValidadeComboBox = new JComboBox();
+	private JComboBox anoValidadeComboBox = new JComboBox();
 	
 	private boolean pagamentoAutorizado;
 	private AgendaMedica agenda;
@@ -65,39 +71,8 @@ public class PagamentoWindow {
 		frame.getContentPane().setSize(new Dimension(500, 500));
 		frame.getContentPane().setLayout(null);
 		chequePanel.setVisible(false);
-		creditoPanel.setVisible(false);
 		debitoPanel.setVisible(false);
-		
-		//JPanel chequePanel = new JPanel();
-		debitoPanel.setLayout(null);
-		debitoPanel.setBounds(0, 0, 440, 223);
-		frame.getContentPane().add(debitoPanel);
-		
-		JLabel label_1 = new JLabel("Número do cartão");
-		label_1.setBounds(12, 12, 132, 15);
-		debitoPanel.add(label_1);
-		
-		debito_numeroCartaoTxtField = new JTextField();
-		debito_numeroCartaoTxtField.setColumns(10);
-		debito_numeroCartaoTxtField.setBounds(12, 34, 217, 19);
-		debitoPanel.add(debito_numeroCartaoTxtField);
-		
-		JLabel lblSenha_1 = new JLabel("Senha");
-		lblSenha_1.setBounds(12, 65, 217, 15);
-		debitoPanel.add(lblSenha_1);
-		
-		JLabel label_8 = new JLabel("Valor cobrado");
-		label_8.setBounds(301, 12, 127, 15);
-		debitoPanel.add(label_8);
-		
-		debito_valorTxtField = new JTextField();
-		debito_valorTxtField.setColumns(10);
-		debito_valorTxtField.setBounds(301, 34, 127, 19);
-		debitoPanel.add(debito_valorTxtField);
-		
-		debito_senhaField = new JPasswordField();
-		debito_senhaField.setBounds(12, 92, 217, 19);
-		debitoPanel.add(debito_senhaField);
+		creditoPanel.setVisible(false);
 		creditoPanel.setBounds(0, 0, 440, 223);
 		frame.getContentPane().add(creditoPanel);
 		creditoPanel.setLayout(null);
@@ -115,12 +90,12 @@ public class PagamentoWindow {
 		lblNewLabel_1.setBounds(12, 65, 70, 15);
 		creditoPanel.add(lblNewLabel_1);
 		
-		JComboBox mesValidadeComboBox = new JComboBox();
+		//JComboBox mesValidadeComboBox = new JComboBox();
 		mesValidadeComboBox.setModel(new DefaultComboBoxModel(new String[] {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"}));
 		mesValidadeComboBox.setBounds(12, 85, 66, 15);
 		creditoPanel.add(mesValidadeComboBox);
 		
-		JComboBox anoValidadeComboBox = new JComboBox();
+		//JComboBox anoValidadeComboBox = new JComboBox();
 		anoValidadeComboBox.setModel(new DefaultComboBoxModel(new String[] {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"}));
 		anoValidadeComboBox.setBounds(102, 85, 66, 15);
 		creditoPanel.add(anoValidadeComboBox);
@@ -155,6 +130,37 @@ public class PagamentoWindow {
 		credito_valorField.setBounds(301, 34, 127, 19);
 		creditoPanel.add(credito_valorField);
 		credito_valorField.setColumns(10);
+		
+		//JPanel chequePanel = new JPanel();
+		debitoPanel.setLayout(null);
+		debitoPanel.setBounds(0, 0, 440, 223);
+		frame.getContentPane().add(debitoPanel);
+		
+		JLabel label_1 = new JLabel("Número do cartão");
+		label_1.setBounds(12, 12, 132, 15);
+		debitoPanel.add(label_1);
+		
+		debito_numeroCartaoTxtField = new JTextField();
+		debito_numeroCartaoTxtField.setColumns(10);
+		debito_numeroCartaoTxtField.setBounds(12, 34, 217, 19);
+		debitoPanel.add(debito_numeroCartaoTxtField);
+		
+		JLabel lblSenha_1 = new JLabel("Senha");
+		lblSenha_1.setBounds(12, 65, 217, 15);
+		debitoPanel.add(lblSenha_1);
+		
+		JLabel label_8 = new JLabel("Valor cobrado");
+		label_8.setBounds(301, 12, 127, 15);
+		debitoPanel.add(label_8);
+		
+		debito_valorTxtField = new JTextField();
+		debito_valorTxtField.setColumns(10);
+		debito_valorTxtField.setBounds(301, 34, 127, 19);
+		debitoPanel.add(debito_valorTxtField);
+		
+		debito_senhaField = new JPasswordField();
+		debito_senhaField.setBounds(12, 92, 217, 19);
+		debitoPanel.add(debito_senhaField);
 		
 		//JPanel debitoPanel = new JPanel();
 		chequePanel.setLayout(null);
@@ -191,35 +197,47 @@ public class PagamentoWindow {
 		JButton btnNewButton = new JButton("Confirmar");
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseReleased(MouseEvent e) {
 				switch (mode) {
 				case (0) :
-					if (  cheque_numeroContaTxtField.getText()==""
-					   || cheque_numeroChequeTextField.getText() == ""
-					   || cheque_valorCobradoTextField.getText() == "")
-						JOptionPane.showMessageDialog(null, "Complete todosos campos!");
-					frame.dispose();
+					if (  cheque_numeroContaTxtField.getText().equals("")
+					   || cheque_numeroChequeTextField.getText().equals("")
+					   || cheque_valorCobradoTextField.getText().equals("")) {
+						JOptionPane.showMessageDialog(null, "Complete todos os campos!");
+						return;
+					}
 					break;
 				case (1) :
-					if (  credito_nCartaoField.getText() == "" 
-					   || credito_cvcTextField.getText() == ""
-					   || credito_nomeCartaoTextField.getText() == ""
-					   || credito_valorField.getText() == "")
+					if (  credito_nCartaoField.getText().equals("")
+					   || credito_cvcTextField.getText().equals("")
+					   || credito_nomeCartaoTextField.getText().equals("")
+					   || credito_valorField.getText().equals("")) {
 						JOptionPane.showMessageDialog(null, "Complete todos os campos!");
-					frame.dispose();
+						return;
+					}
 					break;
 				case (2) :
-					if (  debito_numeroCartaoTxtField.getText() == ""
-					   || debito_valorTxtField.getText() == ""
-					   || debito_senhaField.getText() == "")
+					if (  debito_numeroCartaoTxtField.getText().equals("")
+					   || debito_valorTxtField.getText().equals("")
+					   || debito_senhaField.getText().equals("")) {
 						JOptionPane.showMessageDialog(null, "Complete todos os campos!");
-					frame.dispose();
+						return;
+					}
 					break;
 				}
 				
 				lblProcessando.setVisible(true);
-				completePagamento();
-				frame.dispose();
+				
+			    ActionListener listener = new ActionListener(){
+			        public void actionPerformed(ActionEvent event){
+						processPagamentoInstituicao();
+						resetWindow();
+						frame.dispose();
+			        }
+			    };
+			    Timer timer = new Timer(3000, listener);
+			    timer.setRepeats(false);
+			    timer.start();
 			}
 		});
 		btnNewButton.setBounds(323, 245, 117, 25);
@@ -228,7 +246,7 @@ public class PagamentoWindow {
 		JButton btnNewButton_1 = new JButton("Voltar");
 		btnNewButton_1.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseReleased(MouseEvent e) {
 				frame.dispose();
 			}
 		});
@@ -244,7 +262,7 @@ public class PagamentoWindow {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
-	public void completePagamento () {
+	public void processPagamentoInstituicao () {
 		Random r = new Random();
 		int dice = r.nextInt(10);
 				
@@ -256,9 +274,29 @@ public class PagamentoWindow {
 		}
 	}
 	
-	public void setVisible(boolean b, int mode, AgendaMedica agenda) {
-		this.agenda = agenda;
+	public void processPagamentoConvenio (String convenio, String procedimento, String paciente) {
+		Random r = new Random();
+		int dice = r.nextInt(12);
 				
+		if (dice == 11) {
+			JOptionPane.showMessageDialog(null, "O convenio " + convenio 
+					+ " não autorizou o procedimento " + procedimento
+					+ " para o paciente " + paciente 
+					+ ".");
+		} else {
+			AgendaMedicaDAO.getInstance().persist(agenda);
+			JOptionPane.showMessageDialog(null, "Agendado!");
+		}
+	}
+	
+	public void processPagamentoDinheiro () {
+		//emitir recibo
+	}
+	
+	public void setVisible( boolean b, int mode, AgendaMedica agenda
+			              , String convenio, String procedimento
+			              , String paciente) {
+		this.agenda = agenda;		
 		this.mode = mode;
 		
 		switch (mode) {
@@ -271,8 +309,30 @@ public class PagamentoWindow {
 		case (2) :
 			debitoPanel.setVisible(true);			
 			break;
+		case (3) :
+			processPagamentoDinheiro();
+			return;
+		case (4) :
+			processPagamentoConvenio(convenio, procedimento, paciente);
+			return;
 		}
 		
 		frame.setVisible(b);
+	}
+	
+	public void resetWindow() {
+		lblProcessando.setVisible(false);
+		cheque_numeroContaTxtField.setText("");
+		cheque_numeroChequeTextField.setText("");
+		cheque_valorCobradoTextField.setText("");
+		credito_nCartaoField.setText("");
+		credito_cvcTextField.setText("");
+		credito_nomeCartaoTextField.setText("");
+		credito_valorField.setText("");
+		debito_numeroCartaoTxtField.setText("");
+		debito_valorTxtField.setText("");
+		debito_senhaField.setText("");
+		mesValidadeComboBox.setSelectedIndex(0);
+		anoValidadeComboBox.setSelectedIndex(0);
 	}
 }

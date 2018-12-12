@@ -127,6 +127,23 @@ public class AgendamentoConsultaWindow {
 		
 		JPanel particularPanel = new JPanel();
 		particularPanel.setVisible(false);
+		
+		JPanel convenioPanel = new JPanel();
+		convenioPanel.setBounds(247, 184, 273, 155);
+		frame.getContentPane().add(convenioPanel);
+		convenioPanel.setLayout(null);
+		
+		List<Convenio> convenios = ConvenioDAO.getInstance().findAll();
+		
+		JComboBox comboBoxConvenios = new JComboBox(convenios.toArray());
+		comboBoxConvenios.setEditable(true);
+		comboBoxConvenios.setBounds(12, 30, 249, 19);
+		convenioPanel.add(comboBoxConvenios);
+		
+				JLabel lblNewLabel_4 = new JLabel("Selecione o convenio");
+				lblNewLabel_4.setFont(new Font("Dialog", Font.BOLD, 11));
+				lblNewLabel_4.setBounds(12, 12, 249, 15);
+				convenioPanel.add(lblNewLabel_4);
 		particularPanel.setBounds(247, 184, 273, 155);
 		frame.getContentPane().add(particularPanel);
 		particularPanel.setLayout(null);
@@ -160,29 +177,12 @@ public class AgendamentoConsultaWindow {
 		dinheiroRadio.setBounds(8, 116, 149, 23);
 		particularPanel.add(dinheiroRadio);
 		
-		JPanel convenioPanel = new JPanel();
-		convenioPanel.setBounds(247, 184, 273, 155);
-		frame.getContentPane().add(convenioPanel);
-		convenioPanel.setLayout(null);
-		
 //		JScrollPane scrollPane_1 = new JScrollPane();
 //		scrollPane_1.setBounds(12, 30, 249, 55);
 //		convenioPanel.add(scrollPane_1);
 //		
 //		JList conveniosList = new JList();
 //		scrollPane_1.setColumnHeaderView(conveniosList);
-		
-		List<Convenio> convenios = ConvenioDAO.getInstance().findAll();
-		
-		JComboBox comboBoxConvenios = new JComboBox(convenios.toArray());
-		comboBoxConvenios.setEditable(true);
-		comboBoxConvenios.setBounds(12, 30, 249, 19);
-		convenioPanel.add(comboBoxConvenios);
-
-		JLabel lblNewLabel_4 = new JLabel("Selecione o convenio");
-		lblNewLabel_4.setFont(new Font("Dialog", Font.BOLD, 11));
-		lblNewLabel_4.setBounds(12, 12, 249, 15);
-		convenioPanel.add(lblNewLabel_4);
 				
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(12, 208, 223, 131);
@@ -288,7 +288,7 @@ public class AgendamentoConsultaWindow {
 		JRadioButton convenioRadio = new JRadioButton("Convênio");
 		convenioRadio.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseReleased(MouseEvent e) {
 				if (convenioRadio.isSelected()) {
 					convenioPanel.setVisible(true);
 					particularPanel.setVisible(false);
@@ -303,7 +303,7 @@ public class AgendamentoConsultaWindow {
 		JRadioButton particularRadio = new JRadioButton("Particular");
 		particularRadio.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseReleased(MouseEvent e) {
 				if(particularRadio.isSelected()) {
 					particularPanel.setVisible(true);
 					convenioPanel.setVisible(false);
@@ -317,7 +317,7 @@ public class AgendamentoConsultaWindow {
 		
 		JButton voltarButton = new JButton("Voltar");
 		voltarButton.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
+			public void mouseReleased(MouseEvent e) {
 				frame.dispose();
 			}
 		});
@@ -327,7 +327,7 @@ public class AgendamentoConsultaWindow {
 		JButton agendarButton = new JButton("Agendar");
 		agendarButton.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseReleased(MouseEvent e) {
 				if( horariosList.isSelectionEmpty()
 			     || comboBoxPacientes.getSelectedItem().toString() == ""
 			     || (!convenioRadio.isSelected() && !particularRadio.isSelected())
@@ -351,6 +351,10 @@ public class AgendamentoConsultaWindow {
 			
 				agenda.setPaciente(PacienteDAO.getInstance().getById(Integer.parseInt(comboBoxPacientes.getSelectedItem().toString().split(" ")[0])));
 				
+				String convenio = "";
+				String procedimento = "";
+				String paciente = "";
+				
 				int mode = -1; 
 				
 				if (chequeRadio.isSelected())
@@ -361,8 +365,14 @@ public class AgendamentoConsultaWindow {
 					mode = 2;
 				else if (dinheiroRadio.isSelected())
 					mode = 3;
-				
-				pagamentoWindow.setVisible(true, mode, agenda);
+				else if (convenioRadio.isSelected()) {
+					convenio = comboBoxConvenios.getSelectedItem().toString().split("-")[1].trim();
+					procedimento = MedicoDAO.getInstance().getById(crmMedico).getEspecialidade().getNome();
+					paciente = PacienteDAO.getInstance().getById(Integer.parseInt(comboBoxPacientes.getSelectedItem().toString().split(" ")[0])).getNome();
+					mode = 4;
+				}
+								
+				pagamentoWindow.setVisible(true, mode, agenda, convenio, procedimento, paciente);
 				
 				frame.dispose();
 			}

@@ -73,7 +73,7 @@ public class AtualizacaoWindow {
 		selecionarButton.addMouseListener(new MouseAdapter() {
 			@SuppressWarnings({ "rawtypes", "serial", "unchecked" })
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseReleased(MouseEvent e) {
 				if(!selecionarButton.isEnabled()) {
 					return;
 				}
