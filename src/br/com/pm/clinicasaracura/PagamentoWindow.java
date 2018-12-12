@@ -16,6 +16,7 @@ import br.com.pm.clinicasaracura.dao.AgendaMedicaDAO;
 import br.com.pm.clinicasaracura.entity.AgendaMedica;
 
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JProgressBar;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
@@ -24,6 +25,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.awt.Color;
 import javax.swing.DefaultComboBoxModel;
 
@@ -334,5 +338,22 @@ public class PagamentoWindow {
 		debito_senhaField.setText("");
 		mesValidadeComboBox.setSelectedIndex(0);
 		anoValidadeComboBox.setSelectedIndex(0);
+	}
+	
+	public void emitirRecibo() {
+		JFileChooser j = new JFileChooser();
+		j.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		Integer opt = j.showOpenDialog(null);
+		
+		PrintWriter writer;
+		try {
+			writer = new PrintWriter(j.getSelectedFile());
+			writer.println("Das ist ein Test");
+			writer.println("Das ist ein anderer Test");
+			writer.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
