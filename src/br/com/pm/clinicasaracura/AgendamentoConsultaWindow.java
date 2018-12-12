@@ -127,23 +127,6 @@ public class AgendamentoConsultaWindow {
 		
 		JPanel particularPanel = new JPanel();
 		particularPanel.setVisible(false);
-		
-		JPanel convenioPanel = new JPanel();
-		convenioPanel.setBounds(247, 184, 273, 155);
-		frame.getContentPane().add(convenioPanel);
-		convenioPanel.setLayout(null);
-		
-		List<Convenio> convenios = ConvenioDAO.getInstance().findAll();
-		
-		JComboBox comboBoxConvenios = new JComboBox(convenios.toArray());
-		comboBoxConvenios.setEditable(true);
-		comboBoxConvenios.setBounds(12, 30, 249, 19);
-		convenioPanel.add(comboBoxConvenios);
-		
-				JLabel lblNewLabel_4 = new JLabel("Selecione o convenio");
-				lblNewLabel_4.setFont(new Font("Dialog", Font.BOLD, 11));
-				lblNewLabel_4.setBounds(12, 12, 249, 15);
-				convenioPanel.add(lblNewLabel_4);
 		particularPanel.setBounds(247, 184, 273, 155);
 		frame.getContentPane().add(particularPanel);
 		particularPanel.setLayout(null);
@@ -173,11 +156,28 @@ public class AgendamentoConsultaWindow {
 		
 		JRadioButton dinheiroRadio = new JRadioButton("Dinheiro");
 		dinheiroRadio.setSelected(true);
-
-		buttonGroup_1.add(dinheiroRadio);
-		dinheiroRadio.setFont(new Font("Dialog", Font.BOLD, 11));
-		dinheiroRadio.setBounds(8, 116, 149, 23);
-		particularPanel.add(dinheiroRadio);
+		
+				buttonGroup_1.add(dinheiroRadio);
+				dinheiroRadio.setFont(new Font("Dialog", Font.BOLD, 11));
+				dinheiroRadio.setBounds(8, 116, 149, 23);
+				particularPanel.add(dinheiroRadio);
+		
+		JPanel convenioPanel = new JPanel();
+		convenioPanel.setBounds(247, 184, 273, 155);
+		frame.getContentPane().add(convenioPanel);
+		convenioPanel.setLayout(null);
+		
+		List<Convenio> convenios = ConvenioDAO.getInstance().findAll();
+		
+		JComboBox comboBoxConvenios = new JComboBox(convenios.toArray());
+		comboBoxConvenios.setEditable(true);
+		comboBoxConvenios.setBounds(12, 30, 249, 19);
+		convenioPanel.add(comboBoxConvenios);
+		
+				JLabel lblNewLabel_4 = new JLabel("Selecione o convenio");
+				lblNewLabel_4.setFont(new Font("Dialog", Font.BOLD, 11));
+				lblNewLabel_4.setBounds(12, 12, 249, 15);
+				convenioPanel.add(lblNewLabel_4);
 		
 //		JScrollPane scrollPane_1 = new JScrollPane();
 //		scrollPane_1.setBounds(12, 30, 249, 55);
@@ -288,6 +288,7 @@ public class AgendamentoConsultaWindow {
 		frame.getContentPane().add(lblNewLabel_3);
 		
 		JRadioButton convenioRadio = new JRadioButton("Convênio");
+		buttonGroup.add(convenioRadio);
 		convenioRadio.setSelected(true);
 		convenioRadio.addMouseListener(new MouseAdapter() {
 			@Override
@@ -299,8 +300,6 @@ public class AgendamentoConsultaWindow {
 			}
 		});
 		convenioRadio.setFont(new Font("Dialog", Font.BOLD, 11));
-
-		buttonGroup.add(convenioRadio);
 		convenioRadio.setBounds(243, 160, 90, 23);
 		frame.getContentPane().add(convenioRadio);
 		
@@ -361,7 +360,13 @@ public class AgendamentoConsultaWindow {
 				
 				int mode = -1; 
 				
-				if (chequeRadio.isSelected())
+				if (convenioRadio.isSelected()) {
+					mode = 4;					
+					convenio = comboBoxConvenios.getSelectedItem().toString().split("-")[1].trim();
+					procedimento = MedicoDAO.getInstance().getById(crmMedico).getEspecialidade().getNome();
+					paciente = PacienteDAO.getInstance().getById(Integer.parseInt(comboBoxPacientes.getSelectedItem().toString().split(" ")[0])).getNome();
+				}				
+				else if (chequeRadio.isSelected())
 					mode = 0;
 				else if (creditoRadio.isSelected())
 					mode = 1;
@@ -369,13 +374,7 @@ public class AgendamentoConsultaWindow {
 					mode = 2;
 				else if (dinheiroRadio.isSelected())
 					mode = 3;
-				else if (convenioRadio.isSelected()) {
-					convenio = comboBoxConvenios.getSelectedItem().toString().split("-")[1].trim();
-					procedimento = MedicoDAO.getInstance().getById(crmMedico).getEspecialidade().getNome();
-					paciente = PacienteDAO.getInstance().getById(Integer.parseInt(comboBoxPacientes.getSelectedItem().toString().split(" ")[0])).getNome();
-					mode = 4;
-				}
-								
+			
 				pagamentoWindow.setVisible(true, mode, agenda, convenio, procedimento, paciente);
 				
 				frame.dispose();
