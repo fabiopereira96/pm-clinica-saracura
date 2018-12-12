@@ -124,24 +124,24 @@ public class AgendamentoExameWindow {
 		
 		JCalendar calendar = new JCalendar();
 		calendar.getDayChooser().addPropertyChangeListener(new PropertyChangeListener() {
-		    public void propertyChange(PropertyChangeEvent evt) {
-		    	chosenDate = calendar.getDate();
-		    	
-		    	DefaultListModel horariosModel = new DefaultListModel();
-		    	
+			public void propertyChange(PropertyChangeEvent evt) {
+				chosenDate = calendar.getDate();
+				
+				DefaultListModel horariosModel = new DefaultListModel();
+				
 				String[] minsPossiveis = new String[] {"00", "20", "40"};
 				for (int hora = 7; hora < 20; hora++) {
 					for (int m = 0; m < 3; m++) {
 						for (Equipamento equip : equips) {
 							if (equip.getStatusFuncionamento()) {
-						        Calendar cal = Calendar.getInstance();
-						        cal.setTime(chosenDate);
-						        cal.set(Calendar.HOUR_OF_DAY, hora);
-						        cal.set(Calendar.MINUTE, m*20);
-						        cal.set(Calendar.SECOND, 0);
-						        cal.set(Calendar.MILLISECOND, 0);
-						        Date finalDate = cal.getTime();
-						        
+								Calendar cal = Calendar.getInstance();
+								cal.setTime(chosenDate);
+								cal.set(Calendar.HOUR_OF_DAY, hora);
+								cal.set(Calendar.MINUTE, m*20);
+								cal.set(Calendar.SECOND, 0);
+								cal.set(Calendar.MILLISECOND, 0);
+								Date finalDate = cal.getTime();
+								
 								AgendaEquipamento agenda = AgendaEquipamentoDAO.getInstance().getByDate(finalDate);
 								if (agenda == null) {
 									horariosModel.addElement(hora + ":" + minsPossiveis[m] + " - " + equip);
@@ -155,7 +155,7 @@ public class AgendamentoExameWindow {
 				horariosList.setModel(horariosModel);
 				
 				scrollPane.setViewportView(horariosList);
-		    }
+			}
 		});
 		calendar.setBounds(12, 34, 223, 138);
 		frame.getContentPane().add(calendar);
@@ -219,12 +219,12 @@ public class AgendamentoExameWindow {
 		voltarButton.addMouseListener(new MouseAdapter() {
 		   @Override
 		   public void mouseReleased(MouseEvent e) {
-		    try {
-			    setVisible(false);
-		    	frame.dispose();
-		    } catch (Exception f) {
-		     System.exit(0);
-		    }
+			try {
+				setVisible(false);
+				frame.dispose();
+			} catch (Exception f) {
+			 System.exit(0);
+			}
 		   }
 		});
 
@@ -232,7 +232,7 @@ public class AgendamentoExameWindow {
 		
 		JButton agendarButton = new JButton("Agendar");
 		agendarButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void mouseReleased(ActionEvent e) {
 			}
 		});
 		agendarButton.setBounds(403, 354, 117, 25);
