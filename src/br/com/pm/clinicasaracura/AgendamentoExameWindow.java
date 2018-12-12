@@ -49,6 +49,7 @@ public class AgendamentoExameWindow {
 	private int tipoExame;
 	private JScrollPane scrollPane;
 	private List<Equipamento> equips;
+	private PagamentoWindow pagamentoWindow = new PagamentoWindow();
 	
 	/**
 	 * Create the application.
