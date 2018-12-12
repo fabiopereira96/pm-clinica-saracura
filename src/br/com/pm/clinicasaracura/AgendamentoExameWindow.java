@@ -97,6 +97,8 @@ public class AgendamentoExameWindow {
 		particularPanel.add(debitoRadio);
 		
 		JRadioButton dinheiroRadio = new JRadioButton("Dinheiro");
+		dinheiroRadio.setSelected(true);
+
 		buttonGroup_1.add(dinheiroRadio);
 		dinheiroRadio.setFont(new Font("Dialog", Font.BOLD, 11));
 		dinheiroRadio.setBounds(8, 116, 149, 23);

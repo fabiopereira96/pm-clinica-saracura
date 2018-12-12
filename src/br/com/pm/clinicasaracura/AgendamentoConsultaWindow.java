@@ -172,6 +172,8 @@ public class AgendamentoConsultaWindow {
 		particularPanel.add(debitoRadio);
 		
 		JRadioButton dinheiroRadio = new JRadioButton("Dinheiro");
+		dinheiroRadio.setSelected(true);
+
 		buttonGroup_1.add(dinheiroRadio);
 		dinheiroRadio.setFont(new Font("Dialog", Font.BOLD, 11));
 		dinheiroRadio.setBounds(8, 116, 149, 23);
@@ -286,6 +288,7 @@ public class AgendamentoConsultaWindow {
 		frame.getContentPane().add(lblNewLabel_3);
 		
 		JRadioButton convenioRadio = new JRadioButton("Convênio");
+		convenioRadio.setSelected(true);
 		convenioRadio.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -296,6 +299,7 @@ public class AgendamentoConsultaWindow {
 			}
 		});
 		convenioRadio.setFont(new Font("Dialog", Font.BOLD, 11));
+
 		buttonGroup.add(convenioRadio);
 		convenioRadio.setBounds(243, 160, 90, 23);
 		frame.getContentPane().add(convenioRadio);
