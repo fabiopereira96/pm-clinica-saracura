@@ -1,20 +1,29 @@
 package br.com.pm.clinicasaracura;
-import java.awt.EventQueue;
 
-import javax.swing.JFrame;
-import javax.swing.JButton;
+import java.awt.EventQueue;
 import java.awt.BorderLayout;
-import javax.swing.JLabel;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Dimension;
-import javax.swing.JPanel;
 import java.awt.Font;
+
+import javax.swing.JFrame;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.plaf.*;
+import javax.swing.plaf.metal.*;
+import javax.swing.ImageIcon;
+
+import javax.imageio.ImageIO;
 
 public class MainWindow {
-
 	private JFrame frame;
+
+	private final static String LOGOPATH = "src/resources/logo-sized.png";
 	private static MainWindow mainWindow = new MainWindow();
 	private static EspecialidadesWindow especialidadesWindow = new EspecialidadesWindow();
 	private static AtualizacaoWindow atualizacaoWindow = new AtualizacaoWindow();
@@ -47,11 +56,19 @@ public class MainWindow {
 	 */
 	private void initialize() {
 		/* Setup */
+		try {
+			UIManager.setLookAndFeel(new MetalLookAndFeel());
+			JFrame.setDefaultLookAndFeelDecorated(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		frame = new JFrame();
 		frame.getContentPane().setSize(new Dimension(500, 300));
 		frame.setSize(new Dimension(500, 380));
 		frame.setResizable(false);
-
+		frame.setTitle("Clínica Saracura");
+		
 		JPanel panel = new JPanel();
 		panel.setSize(new Dimension(500, 300));
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
@@ -113,10 +130,10 @@ public class MainWindow {
 		exitButton.setBounds(12, 303, 472, 25);
 		panel.add(exitButton);
 
-		JLabel saracuraLabel = new JLabel("Clínica Saracura");
+		ImageIcon logo = new ImageIcon(LOGOPATH);
+		JLabel saracuraLabel = new JLabel(logo);
 		saracuraLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		saracuraLabel.setFont(new Font("Arial", Font.BOLD, 40));
-		saracuraLabel.setBounds(12, 60, 472, 64);
+		saracuraLabel.setBounds(12, 60, 472, 200);
 		panel.add(saracuraLabel);
 	}
 }
