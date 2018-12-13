@@ -3,11 +3,19 @@ package br.com.pm.clinicasaracura;
 import java.awt.EventQueue;
 import java.util.Date;
 import java.util.Calendar;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.DefaultListModel;
+import javax.swing.ListSelectionModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import com.toedter.calendar.JDayChooser;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -15,11 +23,16 @@ import java.beans.PropertyChangeListener;
 import br.com.pm.clinicasaracura.dao.ConvenioDAO;
 import br.com.pm.clinicasaracura.dao.PacienteDAO;
 import br.com.pm.clinicasaracura.dao.AgendaEquipamentoDAO;
+import br.com.pm.clinicasaracura.dao.AgendaMedicaDAO;
 import br.com.pm.clinicasaracura.dao.EquipamentoDAO;
+import br.com.pm.clinicasaracura.dao.MedicoDAO;
 import br.com.pm.clinicasaracura.entity.Convenio;
+import br.com.pm.clinicasaracura.entity.Medico;
 import br.com.pm.clinicasaracura.entity.Paciente;
 import br.com.pm.clinicasaracura.entity.AgendaEquipamento;
+import br.com.pm.clinicasaracura.entity.AgendaMedica;
 import br.com.pm.clinicasaracura.entity.Equipamento;
+import br.com.pm.clinicasaracura.entity.DiaAtendimento;
 
 import com.toedter.calendar.JCalendar;
 import javax.swing.JList;
@@ -41,16 +54,40 @@ import java.awt.event.ActionEvent;
 public class AgendamentoExameWindow {
 
 	private JFrame frame;
-	private JTextField nomePacienteTxtField;
-	private JTextField telefoneTxtField;
+	
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private final ButtonGroup buttonGroup_1 = new ButtonGroup();
+	private JScrollPane scrollPane;
+	private JScrollPane scrollPane_2;
+
+	private PagamentoWindow pagamentoWindow = new PagamentoWindow<AgendaEquipamento>();
+	private List<Medico> allDoctors;
+	private Map<String, List<Medico>> doctorsPerTime = new HashMap<String, List<Medico>>();
+	private List<Equipamento> allEquips;
+	private DefaultComboBoxModel currentDoctors;
+	private DefaultComboBoxModel workingEquips;
 	private Date chosenDate;
 	private int tipoExame;
-	private JScrollPane scrollPane;
-	private List<Equipamento> equips;
-	private PagamentoWindow pagamentoWindow = new PagamentoWindow();
-	
+	private final String[] minsPossiveis = new String[] {"00", "20", "40"};
+    private final ListSelectionListener timeChanged = new ListSelectionListener() {
+        public void valueChanged(ListSelectionEvent event) {
+        	if (event.getValueIsAdjusting())
+        		return;
+        	
+            JList list = (JList)event.getSource();
+            
+            @SuppressWarnings("deprecation")
+			Object selectionValues[] = list.getSelectedValues();
+            String timeStr = (String)selectionValues[0];
+
+            currentDoctors.removeAllElements();
+            List<Medico> doctors = doctorsPerTime.get(timeStr);
+            for (Medico doctor : doctors) {
+            	currentDoctors.addElement(doctor);
+            }
+        }
+    };
+    
 	/**
 	 * Create the application.
 	 */
@@ -68,6 +105,8 @@ public class AgendamentoExameWindow {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
+		this.allDoctors = MedicoDAO.getInstance().findAll();
+
 		JPanel particularPanel = new JPanel();
 		particularPanel.setVisible(false);
 		particularPanel.setBounds(247, 184, 273, 155);
@@ -110,50 +149,74 @@ public class AgendamentoExameWindow {
 		frame.getContentPane().add(convenioPanel);
 		convenioPanel.setLayout(null);
 
-		List<Convenio> convenios = ConvenioDAO.getInstance().findAll();
-		
-		JComboBox comboBoxConvenios = new JComboBox(convenios.toArray());
-		comboBoxConvenios.setEditable(true);
-		comboBoxConvenios.setBounds(12, 30, 249, 19);
-		convenioPanel.add(comboBoxConvenios);
-
 		JLabel lblNewLabel_4 = new JLabel("Selecione o convenio");
 		lblNewLabel_4.setFont(new Font("Dialog", Font.BOLD, 11));
 		lblNewLabel_4.setBounds(12, 12, 249, 15);
 		convenioPanel.add(lblNewLabel_4);
 		
+		List<Convenio> convenios = ConvenioDAO.getInstance().findAll();
+
+		JComboBox comboBoxConvenios = new JComboBox(convenios.toArray());
+		comboBoxConvenios.setEditable(false);
+		comboBoxConvenios.setEnabled(true);
+		comboBoxConvenios.setBounds(12, 30, 249, 19);
+		convenioPanel.add(comboBoxConvenios);
+	
 		JCalendar calendar = new JCalendar();
 		calendar.getDayChooser().addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
 				chosenDate = calendar.getDate();
 				
 				DefaultListModel horariosModel = new DefaultListModel();
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(chosenDate);
+				int dayofweek = cal.get(Calendar.DAY_OF_WEEK);
 				
-				String[] minsPossiveis = new String[] {"00", "20", "40"};
 				for (int hora = 7; hora < 20; hora++) {
 					for (int m = 0; m < 3; m++) {
-						for (Equipamento equip : equips) {
-							if (equip.getStatusFuncionamento()) {
-								Calendar cal = Calendar.getInstance();
-								cal.setTime(chosenDate);
-								cal.set(Calendar.HOUR_OF_DAY, hora);
-								cal.set(Calendar.MINUTE, m*20);
-								cal.set(Calendar.SECOND, 0);
-								cal.set(Calendar.MILLISECOND, 0);
-								Date finalDate = cal.getTime();
-								
-								AgendaEquipamento agenda = AgendaEquipamentoDAO.getInstance().getByDate(finalDate);
-								if (agenda == null) {
-									horariosModel.addElement(hora + ":" + minsPossiveis[m] + " - " + equip);
+						cal.set(Calendar.HOUR_OF_DAY, hora);
+						cal.set(Calendar.MINUTE, m*20);
+						cal.set(Calendar.SECOND, 0);
+						cal.set(Calendar.MILLISECOND, 0);
+						Date finalDate = cal.getTime();
+
+						List<Medico> availableDoctors = new ArrayList<Medico>();
+						for (Medico doctor : allDoctors) {
+							List<DiaAtendimento> dias = doctor.getDiaAtendimento();
+							
+							boolean atende = false;	
+							for (DiaAtendimento dia : dias) {
+								if (dia.getIdDia() == dayofweek) {
+									atende = true;
+									break;
 								}
 							}
+							
+							if (!atende) continue;
+							
+							int crm = doctor.getCrm();
+							List<AgendaEquipamento> conflitosEquip = AgendaEquipamentoDAO.getInstance().getByDateAndCrm(finalDate, crm);
+							List<AgendaMedica> conflitosConsulta = AgendaMedicaDAO.getInstance().isConflict(finalDate, doctor);
+
+							if (conflitosEquip.size() == 0 && conflitosConsulta.size() == 0) {
+								availableDoctors.add(doctor);
+							}
+						}
+
+						if (availableDoctors.size() != 0) {
+							String timeStr = hora + ":" + minsPossiveis[m];
+							horariosModel.addElement(timeStr);
+							
+							doctorsPerTime.put(timeStr, availableDoctors);
 						}
 					}
 				}
 				
 				JList horariosList = new JList();
+				horariosList.addListSelectionListener(timeChanged);
+			    horariosList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				horariosList.setModel(horariosModel);
-				
+				horariosList.setSelectedIndex(0);
 				scrollPane.setViewportView(horariosList);
 			}
 		});
@@ -161,8 +224,13 @@ public class AgendamentoExameWindow {
 		frame.getContentPane().add(calendar);
 		
 		scrollPane = new JScrollPane();
+		
 		scrollPane.setBounds(12, 184, 223, 155);
 		frame.getContentPane().add(scrollPane);
+		
+		scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(80, 184, 20, 155);
+		frame.getContentPane().add(scrollPane_2);
 		
 		JLabel lblNewLabel = new JLabel("Selecione uma data");
 		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 11));
@@ -172,14 +240,46 @@ public class AgendamentoExameWindow {
 		List<Paciente> pacientes = PacienteDAO.getInstance().findAll();
 		
 		JComboBox comboBoxPacientes = new JComboBox(pacientes.toArray());
-		comboBoxPacientes.setEditable(true);
+		comboBoxPacientes.setEditable(false);
+		comboBoxPacientes.setEnabled(true);
 		comboBoxPacientes.setBounds(247, 34, 273, 19);
 		
 		frame.getContentPane().add(comboBoxPacientes);
 		
+		JLabel lblNewLabel_5 = new JLabel("Selecione o paciente");
+		lblNewLabel_5.setFont(new Font("Dialog", Font.BOLD, 11));
+		lblNewLabel_5.setBounds(247, 16, 187, 15);
+		frame.getContentPane().add(lblNewLabel_5);
+
+		JComboBox comboBoxMedicos = new JComboBox();
+		this.currentDoctors = (DefaultComboBoxModel)comboBoxMedicos.getModel();
+		comboBoxMedicos.setEditable(false);
+		comboBoxMedicos.setEnabled(true);
+		comboBoxMedicos.setBounds(247, 74, 273, 19);
+		frame.getContentPane().add(comboBoxMedicos);
+		
+		JLabel lblNewLabel_7 = new JLabel("Selecione o médico");
+		lblNewLabel_7.setFont(new Font("Dialog", Font.BOLD, 11));
+		lblNewLabel_7.setBounds(247, 56, 187, 15);
+		frame.getContentPane().add(lblNewLabel_7);
+
+		JComboBox comboBoxEquips = new JComboBox();
+		this.workingEquips = (DefaultComboBoxModel)comboBoxEquips.getModel();	
+		comboBoxEquips.setEditable(false);
+		comboBoxEquips.setEnabled(true);
+		comboBoxEquips.setBounds(247, 114, 273, 19);
+	
+		frame.getContentPane().add(comboBoxEquips);
+		
+		JLabel lblNewLabel_8 = new JLabel("Selecione o equipamento");
+		lblNewLabel_8.setFont(new Font("Dialog", Font.BOLD, 11));
+		lblNewLabel_8.setBounds(247, 96, 187, 15);
+		frame.getContentPane().add(lblNewLabel_8);
+		
+		
 		JLabel lblNewLabel_3 = new JLabel("Forma de atendimento");
 		lblNewLabel_3.setFont(new Font("Dialog", Font.BOLD, 11));
-		lblNewLabel_3.setBounds(247, 137, 187, 15);
+		lblNewLabel_3.setBounds(247, 147, 187, 15);
 		frame.getContentPane().add(lblNewLabel_3);
 		
 		JRadioButton convenioRadio = new JRadioButton("Convênio");
@@ -231,20 +331,26 @@ public class AgendamentoExameWindow {
 		frame.getContentPane().add(voltarButton);
 		
 		JButton agendarButton = new JButton("Agendar");
-		agendarButton.addActionListener(new ActionListener() {
-			public void mouseReleased(ActionEvent e) {
-			}
-		});
 		agendarButton.setBounds(403, 354, 117, 25);
 		frame.getContentPane().add(agendarButton);
+	}
+
+	private void fetchEquips() {
+		this.allEquips = EquipamentoDAO.getInstance().findByExamId(this.tipoExame);
 	}
 	
 	public void setVisible(boolean t) {
 		frame.setVisible(t);
 	}
-	
+
 	public void setTipoExame(int tipo) {
 		this.tipoExame = tipo;
-		this.equips = EquipamentoDAO.getInstance().findByExamId(this.tipoExame);
+		this.fetchEquips();
+
+		workingEquips.removeAllElements();
+		for (Equipamento equip : this.allEquips) {
+			if (equip.getStatusFuncionamento())
+				workingEquips.addElement(equip);
+		}
 	}
 }

@@ -1,12 +1,14 @@
 package br.com.pm.clinicasaracura.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import br.com.pm.clinicasaracura.entity.AgendaEquipamento;
 import br.com.pm.clinicasaracura.entity.Medico;
 
 public class MedicoDAO {

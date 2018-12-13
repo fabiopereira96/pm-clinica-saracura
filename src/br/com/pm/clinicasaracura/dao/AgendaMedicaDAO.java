@@ -2,18 +2,23 @@ package br.com.pm.clinicasaracura.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.text.SimpleDateFormat;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import br.com.pm.clinicasaracura.entity.AgendaEquipamento;
 import br.com.pm.clinicasaracura.entity.AgendaMedica;
+import br.com.pm.clinicasaracura.entity.Medico;
 
 public class AgendaMedicaDAO {
 
 	private static AgendaMedicaDAO instance;
 	protected EntityManager entityManager;
+	private final SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+	
 	public static AgendaMedicaDAO getInstance() {
 		if (instance == null) {
 			instance = new AgendaMedicaDAO();
@@ -41,6 +46,15 @@ public class AgendaMedicaDAO {
 		return entityManager.createQuery("FROM " + AgendaMedica.class.getName() + " WHERE idMedico=" + medicoCrm).getResultList();
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<AgendaMedica> isConflict(final Date date, Medico doctor) {
+		String strDate = this.sdf.format(date);
+
+		return entityManager.createQuery(
+			"FROM " + AgendaMedica.class.getName() + " WHERE diaAgendamento <= '" + strDate + "' AND '" + strDate + "' <= ADDTIME(diaAgendamento, '" + doctor.getIntervaloAtendimento() + ":00') AND idMedico=" + doctor.getCrm()
+		).getResultList();
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<AgendaMedica> findAll() {
 		return entityManager.createQuery("FROM " + AgendaMedica.class.getName()).getResultList();

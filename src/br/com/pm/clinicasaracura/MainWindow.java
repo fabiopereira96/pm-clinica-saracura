@@ -17,11 +17,10 @@ public class MainWindow {
 	private JFrame frame;
 	private static MainWindow mainWindow = new MainWindow();
 	private static EspecialidadesWindow especialidadesWindow = new EspecialidadesWindow();
-	
-	private int nAgendamentos = 0;
-
 	private static AtualizacaoWindow atualizacaoWindow = new AtualizacaoWindow();
 	private static TiposExameWindow tiposExameWindow = new TiposExameWindow();
+
+	private int nAgendamentos = 0;
 
 	/**
 	 * Launch the application.
@@ -37,7 +36,7 @@ public class MainWindow {
 			}
 		});
 	}
-
+ 
 	/**
 	 * Create the application.
 	 */
@@ -77,7 +76,6 @@ public class MainWindow {
 
 		/* Agendamento de exame de imagem */
 		JButton agExameImgButton = new JButton("Agendamento de Exame de Imagem");
-
 		agExameImgButton.setBounds(12, 229, 472, 25);
 		agExameImgButton.addMouseListener(new MouseAdapter() {
 			@Override

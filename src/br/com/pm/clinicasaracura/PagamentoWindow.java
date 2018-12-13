@@ -14,7 +14,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import br.com.pm.clinicasaracura.dao.AgendaMedicaDAO;
+import br.com.pm.clinicasaracura.dao.AgendaEquipamentoDAO;
 import br.com.pm.clinicasaracura.entity.AgendaMedica;
+import br.com.pm.clinicasaracura.entity.AgendaEquipamento;
+
 
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -32,7 +35,7 @@ import java.io.UnsupportedEncodingException;
 import java.awt.Color;
 import javax.swing.DefaultComboBoxModel;
 
-public class PagamentoWindow {
+public class PagamentoWindow<TAgenda> {
 
 	private JFrame frame;
 	private JTextField credito_nCartaoField;
@@ -54,7 +57,8 @@ public class PagamentoWindow {
 	private JComboBox anoValidadeComboBox = new JComboBox();
 	
 	private boolean pagamentoAutorizado;
-	private AgendaMedica agenda;
+	private TAgenda agenda;
+	private int tipoAgenda;
 	private JPasswordField debito_senhaField;
 	
 	private int mode;
@@ -236,7 +240,16 @@ public class PagamentoWindow {
 				
 			    ActionListener listener = new ActionListener(){
 			        public void actionPerformed(ActionEvent event){
-						processPagamentoInstituicao();
+						if (processPagamentoInstituicao()) {
+							if (tipoAgenda == 2) {
+								AgendaEquipamentoDAO.getInstance().persist((AgendaEquipamento)agenda);
+							} else {
+								AgendaMedicaDAO.getInstance().persist((AgendaMedica)agenda);
+							}
+
+							emitirRecibo();
+						}
+						
 						resetWindow();
 						frame.dispose();
 			        }
@@ -268,21 +281,21 @@ public class PagamentoWindow {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
-	public void processPagamentoInstituicao () {
+	public boolean processPagamentoInstituicao () {
 		Random r = new Random();
 		int dice = r.nextInt(10);
 				
 		if (dice == 9) {
 			JOptionPane.showMessageDialog(null, "Pagamento não autorizado pela instituição!");
+			return false;
 		} else {
-			valor = JOptionPane.showInputDialog("Valor cobrado");			
-			AgendaMedicaDAO.getInstance().persist(agenda);
+			valor = JOptionPane.showInputDialog("Valor cobrado");
 			JOptionPane.showMessageDialog(null, "Agendado!");
-			emitirRecibo();
+			return true;
 		}
 	}
 	
-	public void processPagamentoConvenio (String convenio, String procedimento, String paciente) {
+	public boolean processPagamentoConvenio (String convenio, String procedimento, String paciente) {
 		Random r = new Random();
 		int dice = r.nextInt(12);
 				
@@ -291,24 +304,20 @@ public class PagamentoWindow {
 					+ " não autorizou o procedimento " + procedimento
 					+ " para o paciente " + paciente 
 					+ ".");
+			return false;
 		} else {
 			valor = JOptionPane.showInputDialog("Valor cobrado");
-			AgendaMedicaDAO.getInstance().persist(agenda);
 			JOptionPane.showMessageDialog(null, "Agendado!");
-			emitirRecibo();
+			return true;
 		}
-	}
-	
-	public void processPagamentoDinheiro () {
-		emitirRecibo();
 	}
 	
 	public void setVisible( boolean b, int mode, AgendaMedica agenda
 			              , String convenio, String procedimento
 			              , String paciente) {
-		System.out.print("Hey!\n");
 		
-		this.agenda = agenda;		
+		this.agenda = (TAgenda)agenda;
+		this.tipoAgenda = 1;
 		this.mode = mode;
 		
 		switch (mode) {
@@ -322,10 +331,48 @@ public class PagamentoWindow {
 			debitoPanel.setVisible(true);			
 			break;
 		case (3) :
-			processPagamentoDinheiro();
+			AgendaMedicaDAO.getInstance().persist(agenda);
+			emitirRecibo();
 			return;
 		case (4) :
-			processPagamentoConvenio(convenio, procedimento, paciente);
+			if (processPagamentoConvenio(convenio, procedimento, paciente))  {
+				AgendaMedicaDAO.getInstance().persist((AgendaMedica)agenda);
+				emitirRecibo();
+			}
+
+			return;
+		}
+		
+		frame.setVisible(b);
+	}
+
+	public void setVisible( boolean b, int mode, AgendaEquipamento agenda
+				            , String convenio, String procedimento
+				            , String paciente) {
+		
+		this.agenda = (TAgenda)agenda;
+		this.tipoAgenda = 2;
+		this.mode = mode;
+
+		switch (mode) {
+		case (0) :
+			chequePanel.setVisible(true);
+			break;
+		case (1) :
+			creditoPanel.setVisible(true);				
+			break;
+		case (2) :
+			debitoPanel.setVisible(true);			
+			break;
+		case (3) :
+			AgendaEquipamentoDAO.getInstance().persist((AgendaEquipamento)agenda);
+			emitirRecibo();
+			return;
+		case (4) :
+			if (processPagamentoConvenio(convenio, procedimento, paciente))  {
+				AgendaEquipamentoDAO.getInstance().persist((AgendaEquipamento)agenda);
+				emitirRecibo();
+			}
 			return;
 		}
 		

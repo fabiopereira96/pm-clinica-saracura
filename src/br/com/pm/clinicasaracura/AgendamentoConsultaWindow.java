@@ -48,7 +48,7 @@ public class AgendamentoConsultaWindow {
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private final ButtonGroup buttonGroup_1 = new ButtonGroup();
 	
-	private PagamentoWindow pagamentoWindow = new PagamentoWindow();
+	private PagamentoWindow pagamentoWindow = new PagamentoWindow<AgendaMedica>();
 	
 	private int crmMedico;
 	

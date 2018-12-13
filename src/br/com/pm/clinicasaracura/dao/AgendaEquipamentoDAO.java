@@ -42,7 +42,12 @@ public class AgendaEquipamentoDAO {
 	public List<AgendaEquipamento> findAll() {
 		return entityManager.createQuery("FROM " + AgendaEquipamento.class.getName()).getResultList();
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	public List<AgendaEquipamento> getByDateAndCrm(final Date date, int crm) {
+		return entityManager.createQuery("FROM " + AgendaEquipamento.class.getName() + " WHERE dataAgendamento='" + date + "' AND idMedico=" + crm).getResultList();
+	}
+	
 	public void persist(AgendaEquipamento agenda) {
 		try {
 			entityManager.getTransaction().begin();
