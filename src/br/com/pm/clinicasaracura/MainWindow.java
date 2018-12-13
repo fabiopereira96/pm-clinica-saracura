@@ -20,8 +20,6 @@ public class MainWindow {
 	private static AtualizacaoWindow atualizacaoWindow = new AtualizacaoWindow();
 	private static TiposExameWindow tiposExameWindow = new TiposExameWindow();
 
-	private int nAgendamentos = 0;
-
 	/**
 	 * Launch the application.
 	*/
@@ -51,7 +49,7 @@ public class MainWindow {
 		/* Setup */
 		frame = new JFrame();
 		frame.getContentPane().setSize(new Dimension(500, 300));
-		frame.setSize(new Dimension(500, 500));
+		frame.setSize(new Dimension(500, 380));
 		frame.setResizable(false);
 
 		JPanel panel = new JPanel();

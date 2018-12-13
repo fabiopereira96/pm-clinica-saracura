@@ -6,6 +6,8 @@ import java.util.Random;
 import javax.swing.Timer;
 import java.util.concurrent.TimeUnit;
 
+import java.io.File;
+
 import javax.swing.JFrame;
 import java.awt.Dimension;
 import javax.swing.JLabel;
@@ -289,7 +291,6 @@ public class PagamentoWindow<TAgenda> {
 			JOptionPane.showMessageDialog(null, "Pagamento não autorizado pela instituição!");
 			return false;
 		} else {
-			valor = JOptionPane.showInputDialog("Valor cobrado");
 			JOptionPane.showMessageDialog(null, "Agendado!");
 			return true;
 		}
@@ -397,14 +398,18 @@ public class PagamentoWindow<TAgenda> {
 	
 	public void emitirRecibo() {		
 		JOptionPane.showMessageDialog(null, "Salve seu recibo.");
-		
 		JFileChooser j = new JFileChooser();
 		j.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		j.showOpenDialog(null);
-	
+		
 		try {
-			PrintWriter writer = new PrintWriter(j.getSelectedFile());
+			File f = null;
 			
+			f = j.getSelectedFile();
+			if (f == null)
+				return;
+			
+			PrintWriter writer = new PrintWriter(f);
 			JOptionPane.showMessageDialog(null, j.getSelectedFile().getPath());
 			
 			writer.println("====   Clínica Saracura  ====");

@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.JLabel;
 import com.toedter.calendar.JDayChooser;
 
@@ -157,10 +158,10 @@ public class AgendamentoConsultaWindow {
 		JRadioButton dinheiroRadio = new JRadioButton("Dinheiro");
 		dinheiroRadio.setSelected(true);
 		
-				buttonGroup_1.add(dinheiroRadio);
-				dinheiroRadio.setFont(new Font("Dialog", Font.BOLD, 11));
-				dinheiroRadio.setBounds(8, 116, 149, 23);
-				particularPanel.add(dinheiroRadio);
+		buttonGroup_1.add(dinheiroRadio);
+		dinheiroRadio.setFont(new Font("Dialog", Font.BOLD, 11));
+		dinheiroRadio.setBounds(8, 116, 149, 23);
+		particularPanel.add(dinheiroRadio);
 		
 		JPanel convenioPanel = new JPanel();
 		convenioPanel.setBounds(247, 184, 273, 155);
@@ -170,14 +171,15 @@ public class AgendamentoConsultaWindow {
 		List<Convenio> convenios = ConvenioDAO.getInstance().findAll();
 		
 		JComboBox comboBoxConvenios = new JComboBox(convenios.toArray());
-		comboBoxConvenios.setEditable(true);
+		comboBoxConvenios.setEditable(false);
+		comboBoxConvenios.setEnabled(true);
 		comboBoxConvenios.setBounds(12, 30, 249, 19);
 		convenioPanel.add(comboBoxConvenios);
 		
-				JLabel lblNewLabel_4 = new JLabel("Selecione o convenio");
-				lblNewLabel_4.setFont(new Font("Dialog", Font.BOLD, 11));
-				lblNewLabel_4.setBounds(12, 12, 249, 15);
-				convenioPanel.add(lblNewLabel_4);
+		JLabel lblNewLabel_4 = new JLabel("Selecione o convenio");
+		lblNewLabel_4.setFont(new Font("Dialog", Font.BOLD, 11));
+		lblNewLabel_4.setBounds(12, 12, 249, 15);
+		convenioPanel.add(lblNewLabel_4);
 		
 //		JScrollPane scrollPane_1 = new JScrollPane();
 //		scrollPane_1.setBounds(12, 30, 249, 55);
@@ -191,6 +193,7 @@ public class AgendamentoConsultaWindow {
 		frame.getContentPane().add(scrollPane);
 		
 		JList horariosList = new JList();
+	    horariosList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane.setViewportView(horariosList);
 		
 		JCalendar calendar = new JCalendar();
@@ -252,7 +255,8 @@ public class AgendamentoConsultaWindow {
 		List<Paciente> pacientes = PacienteDAO.getInstance().findAll();
 		
 		JComboBox comboBoxPacientes = new JComboBox(pacientes.toArray());
-		comboBoxPacientes.setEditable(true);
+		comboBoxPacientes.setEditable(false);
+		comboBoxPacientes.setEnabled(true);
 		comboBoxPacientes.setBounds(247, 34, 273, 19);
 		
 		frame.getContentPane().add(comboBoxPacientes);
@@ -261,26 +265,6 @@ public class AgendamentoConsultaWindow {
 		lblNewLabel_5.setFont(new Font("Dialog", Font.BOLD, 11));
 		lblNewLabel_5.setBounds(247, 16, 187, 15);
 		frame.getContentPane().add(lblNewLabel_5);
-		
-//		nomePacienteTxtField = new JTextField();
-//		nomePacienteTxtField.setBounds(247, 85, 273, 19);
-//		frame.getContentPane().add(nomePacienteTxtField);
-//		nomePacienteTxtField.setColumns(10);
-//		
-//		JLabel lblNewLabel_1 = new JLabel("Nome do paciente");
-//		lblNewLabel_1.setFont(new Font("Dialog", Font.BOLD, 11));
-//		lblNewLabel_1.setBounds(247, 67, 187, 15);
-//		frame.getContentPane().add(lblNewLabel_1);
-		
-//		JLabel lblNewLabel_2 = new JLabel("Telefone do paciente");
-//		lblNewLabel_2.setFont(new Font("Dialog", Font.BOLD, 11));
-//		lblNewLabel_2.setBounds(247, 67, 187, 15);
-//		frame.getContentPane().add(lblNewLabel_2);
-//		
-//		telefoneTxtField = new JTextField();
-//		telefoneTxtField.setBounds(247, 85, 273, 19);
-//		frame.getContentPane().add(telefoneTxtField);
-//		telefoneTxtField.setColumns(10);
 		
 		JLabel lblNewLabel_3 = new JLabel("Forma de atendimento");
 		lblNewLabel_3.setFont(new Font("Dialog", Font.BOLD, 11));

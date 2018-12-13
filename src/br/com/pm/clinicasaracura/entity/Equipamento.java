@@ -93,6 +93,6 @@ public class Equipamento implements Serializable{
 	
 	@Override
 	public String toString() {
-		return nome;
+		return idEquipamento + " - " + nome;
 	}
 }
