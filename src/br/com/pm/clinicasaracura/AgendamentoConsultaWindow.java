@@ -1,22 +1,11 @@
 package br.com.pm.clinicasaracura;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
-import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.JLabel;
-import com.toedter.calendar.JDayChooser;
 
-import br.com.pm.clinicasaracura.dao.AgendaMedicaDAO;
-import br.com.pm.clinicasaracura.dao.ConvenioDAO;
-import br.com.pm.clinicasaracura.dao.MedicoDAO;
-import br.com.pm.clinicasaracura.dao.PacienteDAO;
-import br.com.pm.clinicasaracura.entity.AgendaMedica;
-import br.com.pm.clinicasaracura.entity.Convenio;
-import br.com.pm.clinicasaracura.entity.DiaAtendimento;
-import br.com.pm.clinicasaracura.entity.Medico;
-import br.com.pm.clinicasaracura.entity.Paciente;
+import br.com.pm.clinicasaracura.dao.*;
+import br.com.pm.clinicasaracura.entity.*;
 
 import com.toedter.calendar.JCalendar;
 import javax.swing.JList;
@@ -41,11 +30,9 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 
-public class AgendamentoConsultaWindow {
-
-	private JFrame frame;
-	private JTextField nomePacienteTxtField;
-	private JTextField telefoneTxtField;
+@SuppressWarnings({ "rawtypes", "serial" })
+public class AgendamentoConsultaWindow extends JFrame {
+	
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private final ButtonGroup buttonGroup_1 = new ButtonGroup();
 	
@@ -54,6 +41,7 @@ public class AgendamentoConsultaWindow {
 	private int crmMedico;
 	
 	// The standard methods DON'T WORK
+	@SuppressWarnings("deprecation")
 	private boolean datesAreEqual(Date a, Date b) {
 		if (  a.getDate()     == b.getDate() 
 	       && a.getMonth()   == b.getMonth()
@@ -107,29 +95,24 @@ public class AgendamentoConsultaWindow {
 		return true;
 	}
 	
-	/**
-	 * Create the application.
-	 */
 	public AgendamentoConsultaWindow() {
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
+	@SuppressWarnings({ "unchecked" })
 	private void initialize() {
 		crmMedico = -1;
 		
-		frame = new JFrame();
-		frame.setResizable(false);
-		frame.setBounds(100, 100, 535, 409);
-		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
-		
+		setResizable(false);
+		setBounds(100, 100, 535, 409);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		getContentPane().setLayout(null);
+		setTitle("Agendamento de consulta");
+
 		JPanel particularPanel = new JPanel();
 		particularPanel.setVisible(false);
 		particularPanel.setBounds(247, 184, 273, 155);
-		frame.getContentPane().add(particularPanel);
+		getContentPane().add(particularPanel);
 		particularPanel.setLayout(null);
 		
 		JLabel lblNewLabel_6 = new JLabel("Forma de pagamento");
@@ -165,7 +148,7 @@ public class AgendamentoConsultaWindow {
 		
 		JPanel convenioPanel = new JPanel();
 		convenioPanel.setBounds(247, 184, 273, 155);
-		frame.getContentPane().add(convenioPanel);
+		getContentPane().add(convenioPanel);
 		convenioPanel.setLayout(null);
 		
 		List<Convenio> convenios = ConvenioDAO.getInstance().findAll();
@@ -190,7 +173,7 @@ public class AgendamentoConsultaWindow {
 				
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(12, 208, 223, 131);
-		frame.getContentPane().add(scrollPane);
+		getContentPane().add(scrollPane);
 		
 		JList horariosList = new JList();
 	    horariosList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -198,6 +181,7 @@ public class AgendamentoConsultaWindow {
 		
 		JCalendar calendar = new JCalendar();
 		calendar.getDayChooser().addPropertyChangeListener(new PropertyChangeListener() {
+			@SuppressWarnings({ "deprecation" })
 			public void propertyChange(PropertyChangeEvent evt) {
 				boolean printHorarios = false;
 				int selectedDiaId = getDayId(calendar.getDate().toString());
@@ -245,12 +229,12 @@ public class AgendamentoConsultaWindow {
 			}
 		});
 		calendar.setBounds(12, 34, 223, 138);
-		frame.getContentPane().add(calendar);
+		getContentPane().add(calendar);
 		
 		JLabel lblNewLabel = new JLabel("Selecione uma data e um horário");
 		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 11));
 		lblNewLabel.setBounds(12, 12, 223, 25);
-		frame.getContentPane().add(lblNewLabel);
+		getContentPane().add(lblNewLabel);
 		
 		List<Paciente> pacientes = PacienteDAO.getInstance().findAll();
 		
@@ -259,17 +243,17 @@ public class AgendamentoConsultaWindow {
 		comboBoxPacientes.setEnabled(true);
 		comboBoxPacientes.setBounds(247, 34, 273, 19);
 		
-		frame.getContentPane().add(comboBoxPacientes);
+		getContentPane().add(comboBoxPacientes);
 		
 		JLabel lblNewLabel_5 = new JLabel("Matricula do Paciente");
 		lblNewLabel_5.setFont(new Font("Dialog", Font.BOLD, 11));
 		lblNewLabel_5.setBounds(247, 16, 187, 15);
-		frame.getContentPane().add(lblNewLabel_5);
+		getContentPane().add(lblNewLabel_5);
 		
 		JLabel lblNewLabel_3 = new JLabel("Forma de atendimento");
 		lblNewLabel_3.setFont(new Font("Dialog", Font.BOLD, 11));
 		lblNewLabel_3.setBounds(247, 137, 187, 15);
-		frame.getContentPane().add(lblNewLabel_3);
+		getContentPane().add(lblNewLabel_3);
 		
 		JRadioButton convenioRadio = new JRadioButton("Convênio");
 		buttonGroup.add(convenioRadio);
@@ -285,7 +269,7 @@ public class AgendamentoConsultaWindow {
 		});
 		convenioRadio.setFont(new Font("Dialog", Font.BOLD, 11));
 		convenioRadio.setBounds(243, 160, 90, 23);
-		frame.getContentPane().add(convenioRadio);
+		getContentPane().add(convenioRadio);
 		
 		JRadioButton particularRadio = new JRadioButton("Particular");
 		particularRadio.addMouseListener(new MouseAdapter() {
@@ -300,19 +284,20 @@ public class AgendamentoConsultaWindow {
 		particularRadio.setFont(new Font("Dialog", Font.BOLD, 11));
 		buttonGroup.add(particularRadio);
 		particularRadio.setBounds(375, 160, 149, 23);
-		frame.getContentPane().add(particularRadio);
+		getContentPane().add(particularRadio);
 		
 		JButton voltarButton = new JButton("Voltar");
 		voltarButton.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
-				frame.dispose();
+				dispose();
 			}
 		});
 		voltarButton.setBounds(12, 354, 117, 25);
-		frame.getContentPane().add(voltarButton);
+		getContentPane().add(voltarButton);
 		
 		JButton agendarButton = new JButton("Agendar");
 		agendarButton.addMouseListener(new MouseAdapter() {
+			@SuppressWarnings("deprecation")
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				if( horariosList.isSelectionEmpty()
@@ -361,7 +346,7 @@ public class AgendamentoConsultaWindow {
 			
 				pagamentoWindow.setVisible(true, mode, agenda, convenio, procedimento, paciente);
 				
-				frame.dispose();
+				dispose();
 			}
 		});
 		
@@ -370,16 +355,16 @@ public class AgendamentoConsultaWindow {
 			}
 		});
 		agendarButton.setBounds(403, 354, 117, 25);
-		frame.getContentPane().add(agendarButton);
+		getContentPane().add(agendarButton);
 		
 		JLabel lblNewLabel_1 = new JLabel("Horários disponíveis");
 		lblNewLabel_1.setFont(new Font("Dialog", Font.BOLD, 11));
 		lblNewLabel_1.setBounds(12, 181, 217, 15);
-		frame.getContentPane().add(lblNewLabel_1);
+		getContentPane().add(lblNewLabel_1);
 	}
-	
+
 	public void setVisible(boolean t, final int crmMedico) {
 		this.crmMedico     = crmMedico; 
-		frame.setVisible(t);
+		setVisible(t);
 	}
 }

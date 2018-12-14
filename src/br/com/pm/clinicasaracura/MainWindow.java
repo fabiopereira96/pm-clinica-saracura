@@ -1,77 +1,51 @@
 package br.com.pm.clinicasaracura;
 
-import java.awt.EventQueue;
 import java.awt.BorderLayout;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Dimension;
-import java.awt.Font;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.plaf.*;
-import javax.swing.plaf.metal.*;
+
+import br.com.pm.clinicasaracura.controllers.SelecaoTipoExameController;
+import br.com.pm.clinicasaracura.entity.TipoExame;
+
 import javax.swing.ImageIcon;
 
-import javax.imageio.ImageIO;
-
-public class MainWindow {
-	private JFrame frame;
+@SuppressWarnings("serial")
+public class MainWindow extends JFrame {
 
 	private final static String LOGOPATH = "src/resources/logo-sized.png";
-	private static MainWindow mainWindow = new MainWindow();
-	private static EspecialidadesWindow especialidadesWindow = new EspecialidadesWindow();
-	private static AtualizacaoWindow atualizacaoWindow = new AtualizacaoWindow();
-	private static TiposExameWindow tiposExameWindow = new TiposExameWindow();
 
-	/**
-	 * Launch the application.
-	*/
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					mainWindow.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
- 
-	/**
-	 * Create the application.
-	 */
+	private static EspecialidadesWindow especialidadesWindow = new EspecialidadesWindow();
+
+	private static SelecaoTipoAgendaWindow selecaoTipoAgendaWindow = new SelecaoTipoAgendaWindow();
+
+	@SuppressWarnings("rawtypes")
+	private static SelecaoWindow selecaoTipoExameWindow
+		= new SelecaoWindow<TipoExame, SelecaoTipoExameController>(
+			new SelecaoTipoExameController()
+		);
+
 	public MainWindow() {
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize() {
 		/* Setup */
-		try {
-			UIManager.setLookAndFeel(new MetalLookAndFeel());
-			JFrame.setDefaultLookAndFeelDecorated(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		frame = new JFrame();
-		frame.getContentPane().setSize(new Dimension(500, 300));
-		frame.setSize(new Dimension(500, 380));
-		frame.setResizable(false);
-		frame.setTitle("Clínica Saracura");
+		getContentPane().setSize(new Dimension(500, 300));
+		setSize(new Dimension(500, 380));
+		setResizable(false);
+		setTitle("Clínica Saracura");
 		
 		JPanel panel = new JPanel();
 		panel.setSize(new Dimension(500, 300));
-		frame.getContentPane().add(panel, BorderLayout.CENTER);
+		getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
 
 		/* Agendamento de consulta */
@@ -96,7 +70,7 @@ public class MainWindow {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				try {
-					tiposExameWindow.setVisible(true);
+					selecaoTipoExameWindow.setVisible(true);
 				} catch (Exception f) {
 					System.exit(0);
 				}
@@ -110,7 +84,7 @@ public class MainWindow {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				try {
-					atualizacaoWindow.setVisible(true);
+					selecaoTipoAgendaWindow.setVisible(true);
 				} catch (Exception f) {
 					System.exit(0);
 				}

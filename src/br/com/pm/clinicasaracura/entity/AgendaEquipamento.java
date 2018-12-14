@@ -131,5 +131,9 @@ public class AgendaEquipamento implements Serializable{
 			return false;
 		return true;
 	}
-	
+
+	@Override
+	public String toString() {
+		return dataAgendamento + " - " + medico;
+	}
 }

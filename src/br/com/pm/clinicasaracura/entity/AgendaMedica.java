@@ -63,4 +63,8 @@ public class AgendaMedica implements Serializable {
 		this.paciente = paciente;
 	}
 
+	@Override
+	public String toString() {
+		return diaAgendamento + " - " + medico;
+	}
 }

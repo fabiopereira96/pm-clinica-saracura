@@ -1,10 +1,8 @@
 package br.com.pm.clinicasaracura;
 
-import java.awt.EventQueue;
 import java.util.Date;
 import java.util.Random;
 import javax.swing.Timer;
-import java.util.concurrent.TimeUnit;
 
 import java.io.File;
 
@@ -23,7 +21,6 @@ import br.com.pm.clinicasaracura.entity.AgendaEquipamento;
 
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
-import javax.swing.JProgressBar;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 import java.awt.Window.Type;
@@ -33,10 +30,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.awt.Color;
 import javax.swing.DefaultComboBoxModel;
 
+@SuppressWarnings("rawtypes")
 public class PagamentoWindow<TAgenda> {
 
 	private JFrame frame;
@@ -58,7 +55,6 @@ public class PagamentoWindow<TAgenda> {
 	private JComboBox mesValidadeComboBox = new JComboBox();
 	private JComboBox anoValidadeComboBox = new JComboBox();
 	
-	private boolean pagamentoAutorizado;
 	private TAgenda agenda;
 	private int tipoAgenda;
 	private JPasswordField debito_senhaField;
@@ -66,16 +62,11 @@ public class PagamentoWindow<TAgenda> {
 	private int mode;
 	private String valor = "";
 
-	/**
-	 * Create the application.
-	 */
 	public PagamentoWindow() {
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
+	@SuppressWarnings("unchecked")
 	private void initialize() {
 		frame = new JFrame();
 		frame.setType(Type.NORMAL);
@@ -208,6 +199,7 @@ public class PagamentoWindow<TAgenda> {
 		
 		JButton btnNewButton = new JButton("Confirmar");
 		btnNewButton.addMouseListener(new MouseAdapter() {
+			@SuppressWarnings("deprecation")
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				switch (mode) {
@@ -313,6 +305,7 @@ public class PagamentoWindow<TAgenda> {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void setVisible( boolean b, int mode, AgendaMedica agenda
 			              , String convenio, String procedimento
 			              , String paciente) {
@@ -347,6 +340,7 @@ public class PagamentoWindow<TAgenda> {
 		frame.setVisible(b);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void setVisible( boolean b, int mode, AgendaEquipamento agenda
 				            , String convenio, String procedimento
 				            , String paciente) {
