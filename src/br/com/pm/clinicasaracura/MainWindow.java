@@ -26,8 +26,8 @@ public class MainWindow {
 	private final static String LOGOPATH = "src/resources/logo-sized.png";
 	private static MainWindow mainWindow = new MainWindow();
 	private static EspecialidadesWindow especialidadesWindow = new EspecialidadesWindow();
-	private static AtualizacaoWindow atualizacaoWindow = new AtualizacaoWindow();
-	private static TiposExameWindow tiposExameWindow = new TiposExameWindow();
+	private static SelecaoAgendaWindow selecaoAgendaWindow = new SelecaoAgendaWindow();
+	//private static TipoExameWindow tiposExameWindow = new TipoExameWindow();
 
 	/**
 	 * Launch the application.
@@ -96,7 +96,7 @@ public class MainWindow {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				try {
-					tiposExameWindow.setVisible(true);
+					//tiposExameWindow.setVisible(true);
 				} catch (Exception f) {
 					System.exit(0);
 				}
@@ -110,7 +110,7 @@ public class MainWindow {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				try {
-					atualizacaoWindow.setVisible(true);
+					selecaoAgendaWindow.setVisible(true);
 				} catch (Exception f) {
 					System.exit(0);
 				}

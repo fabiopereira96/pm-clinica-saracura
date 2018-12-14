@@ -22,7 +22,7 @@ public class EspecialidadesWindow {
 	
 	/* My vars IM SOOO CONFUSED MANN*/
 	private int mode; // 0 - Especialidades, 1 - Medicos
-	private static AgendamentoConsultaWindow agendamentoWindow = new AgendamentoConsultaWindow();
+	//private static AgendamentoConsultaWindow agendamentoWindow = new AgendamentoConsultaWindow();
 	
 	/**
 	 * Create the application.
@@ -108,7 +108,7 @@ public class EspecialidadesWindow {
 					especialidadesList.setModel(medicoListModel);
 				} else if (mode == 1) {
 					Medico medico = (Medico) especialidadesList.getSelectedValue();
-					agendamentoWindow.setVisible(true, medico.getCrm());
+					//agendamentoWindow.setVisible(true, medico.getCrm());
 				}
 			}
 				
