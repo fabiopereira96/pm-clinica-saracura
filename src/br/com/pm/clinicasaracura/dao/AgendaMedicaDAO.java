@@ -8,7 +8,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import br.com.pm.clinicasaracura.entity.AgendaEquipamento;
 import br.com.pm.clinicasaracura.entity.AgendaMedica;
 import br.com.pm.clinicasaracura.entity.Medico;
 
@@ -42,6 +41,7 @@ public class AgendaMedicaDAO {
 		return entityManager.find(AgendaMedica.class, date);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<AgendaMedica> getByMedico(final int medicoCrm) {
 		return entityManager.createQuery("FROM " + AgendaMedica.class.getName() + " WHERE idMedico=" + medicoCrm).getResultList();
 	}

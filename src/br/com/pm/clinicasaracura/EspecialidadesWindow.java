@@ -20,7 +20,6 @@ public class EspecialidadesWindow {
 
 	private JFrame frame;
 	
-	/* My vars IM SOOO CONFUSED MANN*/
 	private int mode; // 0 - Especialidades, 1 - Medicos
 	private static AgendamentoConsultaWindow agendamentoWindow = new AgendamentoConsultaWindow();
 	
