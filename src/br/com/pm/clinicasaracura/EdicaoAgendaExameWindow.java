@@ -1,10 +1,14 @@
 package br.com.pm.clinicasaracura;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -16,12 +20,16 @@ import br.com.pm.clinicasaracura.entity.*;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 public class EdicaoAgendaExameWindow {
 
@@ -35,9 +43,7 @@ public class EdicaoAgendaExameWindow {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void initialize() {		
-		// TODO: Use this.agenda to fill initial values.
-		
+	private void initialize() {			
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.setBounds(100, 100, 535, 420);
@@ -52,17 +58,122 @@ public class EdicaoAgendaExameWindow {
 //		scrollPane_1.setColumnHeaderView(conveniosList);
 		
 		List<Convenio> convenios = ConvenioDAO.getInstance().findAll();
-		
-		JCalendar calendar = new JCalendar();
-		calendar.setBounds(12, 34, 223, 138);
-		frame.getContentPane().add(calendar);
-		
+				
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(12, 184, 223, 155);
 		frame.getContentPane().add(scrollPane);
 		
 		JList horariosList = new JList();
 		scrollPane.setViewportView(horariosList);
+
+		JCalendar calendar = new JCalendar();
+		
+		List<Medico> medicos = MedicoDAO.getInstance().findAll();
+		
+		JComboBox comboBoxMedicos = new JComboBox(medicos.toArray());
+		comboBoxMedicos.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				boolean printHorarios = false;
+				int selectedDiaId = Utils.getDayId(calendar.getDate().toString());
+				int selectedMedicoCrm = Integer.parseInt(comboBoxMedicos.getSelectedItem().toString().split("-")[0].trim());
+				Medico selectedMedico = MedicoDAO.getInstance().getById(selectedMedicoCrm);
+				List<DiaAtendimento> diasAtendimentoList = selectedMedico.getDiaAtendimento();
+				int intervaloAtendimento = Integer.parseInt(selectedMedico.getIntervaloAtendimento().substring(3, 5));
+				int horarioAtendimentoHora   = Integer.parseInt(selectedMedico.getHorarioAtendimento().substring(0, 2));
+				int horarioAtendimentoMinuto = Integer.parseInt(selectedMedico.getHorarioAtendimento().substring(3, 5));
+
+				List<AgendaMedica> selectedMedicoAgenda = AgendaMedicaDAO.getInstance().getByMedico(agenda.getMedico().getCrm());
+				
+				for (DiaAtendimento d : diasAtendimentoList) {
+					if (d.getIdDia() == selectedDiaId) {
+						printHorarios = true;
+						break;
+					}
+				}
+				
+				if (printHorarios) {
+					Date compareDate = calendar.getDate();
+									
+					int currentHora = horarioAtendimentoHora;
+					int currentMin  = horarioAtendimentoMinuto;
+					
+					DefaultListModel listModel = new DefaultListModel();
+														
+					for (int i = 0; (i*intervaloAtendimento) <= 360; i++) {
+						currentHora += (currentMin + intervaloAtendimento) / 60;
+						currentMin = (horarioAtendimentoMinuto + i*intervaloAtendimento) % 60;
+						
+						compareDate.setHours(currentHora);
+						compareDate.setMinutes(currentMin);
+						compareDate.setSeconds(0);
+						
+						if (Utils.thisHorarioIsFree(selectedMedicoAgenda, compareDate))
+							listModel.addElement(String.format("%02d", currentHora) + ":" + String.format("%02d", currentMin));
+					}
+					
+					horariosList.setModel(listModel);
+				}
+				else {
+					DefaultListModel listModel = new DefaultListModel();
+					horariosList.setModel(listModel);
+				}				
+			}
+		});
+		comboBoxMedicos.setEditable(true);
+		comboBoxMedicos.setBounds(247, 75, 273, 19);
+		frame.getContentPane().add(comboBoxMedicos);
+		
+		calendar.getDayChooser().addPropertyChangeListener(new PropertyChangeListener() {
+			@SuppressWarnings({ "deprecation" })
+			public void propertyChange(PropertyChangeEvent evt) {
+				boolean printHorarios = false;
+				int selectedDiaId = Utils.getDayId(calendar.getDate().toString());
+				int selectedMedicoCrm = Integer.parseInt(comboBoxMedicos.getSelectedItem().toString().split("-")[0].trim());
+				Medico selectedMedico = MedicoDAO.getInstance().getById(selectedMedicoCrm);
+				List<DiaAtendimento> diasAtendimentoList = selectedMedico.getDiaAtendimento();
+				int intervaloAtendimento = Integer.parseInt(selectedMedico.getIntervaloAtendimento().substring(3, 5));
+				int horarioAtendimentoHora   = Integer.parseInt(selectedMedico.getHorarioAtendimento().substring(0, 2));
+				int horarioAtendimentoMinuto = Integer.parseInt(selectedMedico.getHorarioAtendimento().substring(3, 5));
+
+				List<AgendaMedica> selectedMedicoAgenda = AgendaMedicaDAO.getInstance().getByMedico(agenda.getMedico().getCrm());
+				
+				for (DiaAtendimento d : diasAtendimentoList) {
+					if (d.getIdDia() == selectedDiaId) {
+						printHorarios = true;
+						break;
+					}
+				}
+				
+				if (printHorarios) {
+					Date compareDate = calendar.getDate();
+									
+					int currentHora = horarioAtendimentoHora;
+					int currentMin  = horarioAtendimentoMinuto;
+					
+					DefaultListModel listModel = new DefaultListModel();
+														
+					for (int i = 0; (i*intervaloAtendimento) <= 360; i++) {
+						currentHora += (currentMin + intervaloAtendimento) / 60;
+						currentMin = (horarioAtendimentoMinuto + i*intervaloAtendimento) % 60;
+						
+						compareDate.setHours(currentHora);
+						compareDate.setMinutes(currentMin);
+						compareDate.setSeconds(0);
+						
+						if (Utils.thisHorarioIsFree(selectedMedicoAgenda, compareDate))
+							listModel.addElement(String.format("%02d", currentHora) + ":" + String.format("%02d", currentMin));
+					}
+					
+					horariosList.setModel(listModel);
+				}
+				else {
+					DefaultListModel listModel = new DefaultListModel();
+					horariosList.setModel(listModel);
+				}
+			}
+		});
+		calendar.setBounds(12, 34, 223, 138);
+		frame.getContentPane().add(calendar);
 		
 		JLabel lblNewLabel = new JLabel("Selecione uma data e um horário");
 		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 11));
@@ -95,13 +206,33 @@ public class EdicaoAgendaExameWindow {
 		JButton agendarButton = new JButton("Atualizar");
 		agendarButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AgendaEquipamentoDAO.getInstance().remove(agenda);
-				
-				AgendaEquipamento novaAgenda = new AgendaEquipamento();
-				
-				// TODO: fill novaAgenda with new data.
-				
-				AgendaEquipamentoDAO.getInstance().persist(novaAgenda);
+				if(  horariosList.isSelectionEmpty()
+					      || comboBoxPacientes.getSelectedItem().toString() == ""
+						) {
+							JOptionPane.showMessageDialog(null, "Selecione todos os campos!");
+							return;
+						}
+
+						AgendaEquipamento novaAgenda = new AgendaEquipamento();
+						
+						int horaAgendamento   = Integer.parseInt(horariosList.getSelectedValue().toString().substring(0,2));
+						int minutoAgendamento = Integer.parseInt(horariosList.getSelectedValue().toString().substring(3,5));
+						
+						Date diaAgendamento = calendar.getDate();
+						diaAgendamento.setHours(horaAgendamento);
+						diaAgendamento.setMinutes(minutoAgendamento);
+						diaAgendamento.setSeconds(0);
+								
+						novaAgenda.setDataAgendamento(diaAgendamento);
+						novaAgenda.setMedico(MedicoDAO.getInstance().getById(agenda.getMedico().getCrm()));
+							
+						novaAgenda.setPaciente(PacienteDAO.getInstance().getById(Integer.parseInt(comboBoxPacientes.getSelectedItem().toString().split(" ")[0])));
+						
+						AgendaEquipamentoDAO.getInstance().persist(novaAgenda);
+						AgendaEquipamentoDAO.getInstance().remove(agenda);
+						
+						JOptionPane.showMessageDialog(null, "Atualizado!");
+						frame.dispose();
 			}
 		});
 		agendarButton.setBounds(403, 354, 117, 25);
@@ -116,10 +247,9 @@ public class EdicaoAgendaExameWindow {
 		lblMedicoResponsavel.setBounds(247, 61, 273, 15);
 		frame.getContentPane().add(lblMedicoResponsavel);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setEditable(true);
-		comboBox.setBounds(247, 75, 273, 19);
-		frame.getContentPane().add(comboBox);
+		calendar.setDate(this.agenda.getDataAgendamento());
+		comboBoxPacientes.setSelectedItem(this.agenda.getPaciente());
+		comboBoxMedicos.setSelectedItem(this.agenda.getMedico());
 	}
 
 	public void showFrame() {

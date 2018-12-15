@@ -83,7 +83,7 @@ public class SelecaoWindow<TItem, TController extends SelectionController> exten
 		getContentPane().add(btnVoltar);
 		
 		btnSelect = new JButton(ctl.getBtnText());
-		btnSelect.setBounds(340, 237, 98, 25);
+		btnSelect.setBounds(290, 237, 148, 25);
 		btnSelect.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
