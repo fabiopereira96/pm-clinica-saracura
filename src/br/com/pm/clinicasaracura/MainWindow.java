@@ -11,41 +11,55 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.plaf.metal.MetalLookAndFeel;
 
-import br.com.pm.clinicasaracura.controllers.SelecaoTipoExameController;
-import br.com.pm.clinicasaracura.entity.TipoExame;
+import br.com.pm.clinicasaracura.controllers.*;
+import br.com.pm.clinicasaracura.entity.*;
 
 import javax.swing.ImageIcon;
 
-@SuppressWarnings("serial")
-public class MainWindow extends JFrame {
+@SuppressWarnings("rawtypes")
+public class MainWindow {
 
+	private JFrame frame;
+	
 	private final static String LOGOPATH = "src/resources/logo-sized.png";
 
-	private static EspecialidadesWindow especialidadesWindow = new EspecialidadesWindow();
-
-	private static SelecaoTipoAgendaWindow selecaoTipoAgendaWindow = new SelecaoTipoAgendaWindow();
-
-	@SuppressWarnings("rawtypes")
+	private static SelecaoWindow especialidadesWindow
+		= new SelecaoWindow<Especialidade, SelecaoEspecialidadeController>(
+			new SelecaoEspecialidadeController()
+		);
+	
 	private static SelecaoWindow selecaoTipoExameWindow
 		= new SelecaoWindow<TipoExame, SelecaoTipoExameController>(
 			new SelecaoTipoExameController()
 		);
 
+	private static SelecaoTipoAgendaWindow selecaoTipoAgendaWindow = new SelecaoTipoAgendaWindow();
+
 	public MainWindow() {
 		initialize();
 	}
-
+	
 	private void initialize() {
 		/* Setup */
-		getContentPane().setSize(new Dimension(500, 300));
-		setSize(new Dimension(500, 380));
-		setResizable(false);
-		setTitle("Clínica Saracura");
+		try {
+			UIManager.setLookAndFeel(new MetalLookAndFeel());
+			JFrame.setDefaultLookAndFeelDecorated(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+		frame = new JFrame();
+		frame.getContentPane().setSize(new Dimension(500, 300));
+		frame.setSize(new Dimension(500, 380));
+		frame.setResizable(false);
+		frame.setTitle("Clínica Saracura");
 		
 		JPanel panel = new JPanel();
 		panel.setSize(new Dimension(500, 300));
-		getContentPane().add(panel, BorderLayout.CENTER);
+		frame.getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
 
 		/* Agendamento de consulta */
@@ -109,5 +123,9 @@ public class MainWindow extends JFrame {
 		saracuraLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		saracuraLabel.setBounds(12, 60, 472, 200);
 		panel.add(saracuraLabel);
+	}
+	
+	public void showFrame() {
+		frame.setVisible(true);
 	}
 }

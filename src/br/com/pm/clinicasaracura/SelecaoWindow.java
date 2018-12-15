@@ -26,8 +26,13 @@ public class SelecaoWindow<TItem, TController extends SelectionController> exten
 	private List<TItem> listData;
 	private DefaultListModel listModel;
 	JList myJList = new JList();
+	private JButton btnSelect;
 
-	public SelecaoWindow(TController ctll) {
+	public SelecaoWindow(TController ctll) {		
+		this.ctl = ctll;
+		this.listModel = new DefaultListModel();
+		
+		initialize();
 		addWindowFocusListener(new WindowFocusListener() {
 			public void windowGainedFocus(WindowEvent e) {
 				// Refreshes the list so it keeps track of newly added entries
@@ -37,19 +42,21 @@ public class SelecaoWindow<TItem, TController extends SelectionController> exten
 				for (TItem agenda : listData) {
 				    listModel.addElement(agenda);
 				}
+				
+				if (listData.size() > 0)
+					myJList.setSelectedIndex(0);
+				else
+					btnSelect.setEnabled(false);
 			}
+			
 			public void windowLostFocus(WindowEvent e) {
 			}
 		});
-		setResizable(false);
-		this.ctl = ctll;
-		this.listModel = new DefaultListModel();
-		
-		initialize();
 	}
 
 	@SuppressWarnings("unchecked")
 	private void initialize() {
+		setResizable(false);
 		setTitle(ctl.getTitle());
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(null);
@@ -78,7 +85,7 @@ public class SelecaoWindow<TItem, TController extends SelectionController> exten
 
 		getContentPane().add(btnVoltar);
 		
-		JButton btnSelect = new JButton(ctl.getBtnText());
+		btnSelect = new JButton(ctl.getBtnText());
 		btnSelect.setBounds(340, 237, 98, 25);
 		btnSelect.addMouseListener(new MouseAdapter() {
 			@Override
@@ -102,11 +109,6 @@ public class SelecaoWindow<TItem, TController extends SelectionController> exten
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(12, 37, 416, 175);
 		getContentPane().add(scrollPane);
-		
-		if (listData.size() > 0)
-			myJList.setSelectedIndex(0);
-		else
-			btnSelect.setEnabled(false);
 	
 		scrollPane.setViewportView(myJList);
 	}

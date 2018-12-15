@@ -26,6 +26,6 @@ public class SelecaoAgendaExameController implements SelectionController<AgendaE
 
 	public void selectedElement(AgendaEquipamento agenda) {
 		EdicaoAgendaExameWindow edicaoAgendaExameWindow = new EdicaoAgendaExameWindow(agenda);
-		edicaoAgendaExameWindow.setVisible(true);
+		edicaoAgendaExameWindow.showFrame();
 	}
 }

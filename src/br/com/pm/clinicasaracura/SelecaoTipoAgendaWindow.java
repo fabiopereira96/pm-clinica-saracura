@@ -12,7 +12,7 @@ import br.com.pm.clinicasaracura.entity.AgendaMedica;
 import br.com.pm.clinicasaracura.entity.AgendaEquipamento;
 
 @SuppressWarnings({ "rawtypes", "serial" })
-public class SelecaoTipoAgendaWindow extends JFrame {
+public class SelecaoTipoAgendaWindow {
 
 	private JFrame frame;
 

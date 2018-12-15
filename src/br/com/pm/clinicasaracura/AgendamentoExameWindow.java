@@ -19,6 +19,7 @@ import java.beans.PropertyChangeListener;
 
 import br.com.pm.clinicasaracura.dao.ConvenioDAO;
 import br.com.pm.clinicasaracura.dao.PacienteDAO;
+import br.com.pm.clinicasaracura.controllers.PgtoAgendaExameController;
 import br.com.pm.clinicasaracura.dao.AgendaEquipamentoDAO;
 import br.com.pm.clinicasaracura.dao.AgendaMedicaDAO;
 import br.com.pm.clinicasaracura.dao.EquipamentoDAO;
@@ -48,15 +49,20 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-@SuppressWarnings({ "rawtypes", "serial" })
-public class AgendamentoExameWindow extends JFrame {
+@SuppressWarnings({ "rawtypes" })
+public class AgendamentoExameWindow {
+	
+	private JFrame frame;
 
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private final ButtonGroup buttonGroup_1 = new ButtonGroup();
 	private JScrollPane scrollPane;
 	private JScrollPane scrollPane_2;
 
-	private PagamentoWindow pagamentoWindow = new PagamentoWindow<AgendaEquipamento>();
+	private PagamentoWindow pagamentoWindow = new PagamentoWindow<AgendaMedica, PgtoAgendaExameController>(
+		new PgtoAgendaExameController()
+	);
+	
 	private List<Medico> allDoctors;
 	private Map<String, List<Medico>> doctorsPerTime = new HashMap<String, List<Medico>>();
 	private List<Equipamento> allEquips;
@@ -67,14 +73,13 @@ public class AgendamentoExameWindow extends JFrame {
 	private int tipoExame;
 	private final int tempoExame = 20;
     private final ListSelectionListener timeChanged = new ListSelectionListener() {
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings({"unchecked", "deprecation"})
 		public void valueChanged(ListSelectionEvent event) {
         	if (event.getValueIsAdjusting())
         		return;
         	
             JList list = (JList)event.getSource();
             
-            @SuppressWarnings("deprecation")
 			Object selectionValues[] = list.getSelectedValues();
             
             currentDoctors.removeAllElements();
@@ -95,18 +100,19 @@ public class AgendamentoExameWindow extends JFrame {
 
 	@SuppressWarnings("unchecked")
 	private void initialize() {
-		setResizable(false);
-		setBounds(100, 100, 535, 409);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		getContentPane().setLayout(null);
-		setTitle("Agendamento de exame de imagem");
+		frame = new JFrame();
+		frame.setBounds(100, 100, 535, 409);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		frame.setTitle("Agendamento de exame de imagem");
+		frame.setResizable(false);
 		
 		this.allDoctors = MedicoDAO.getInstance().findAll();
 
 		JPanel particularPanel = new JPanel();
 		particularPanel.setVisible(false);
 		particularPanel.setBounds(247, 184, 273, 155);
-		getContentPane().add(particularPanel);
+		frame.getContentPane().add(particularPanel);
 		particularPanel.setLayout(null);
 		
 		JLabel lblNewLabel_6 = new JLabel("Forma de pagamento");
@@ -142,7 +148,7 @@ public class AgendamentoExameWindow extends JFrame {
 		
 		JPanel convenioPanel = new JPanel();
 		convenioPanel.setBounds(247, 184, 273, 155);
-		getContentPane().add(convenioPanel);
+		frame.getContentPane().add(convenioPanel);
 		convenioPanel.setLayout(null);
 
 		JLabel lblNewLabel_4 = new JLabel("Selecione o convenio");
@@ -168,7 +174,7 @@ public class AgendamentoExameWindow extends JFrame {
 		horariosList.setModel(horariosModel);
 		scrollPane.setViewportView(horariosList);
 		
-		getContentPane().add(scrollPane);
+		frame.getContentPane().add(scrollPane);
 		
 		JCalendar calendar = new JCalendar();
 		calendar.getDayChooser().addPropertyChangeListener(new PropertyChangeListener() {
@@ -224,16 +230,16 @@ public class AgendamentoExameWindow extends JFrame {
 			}
 		});
 		calendar.setBounds(12, 34, 223, 138);
-		getContentPane().add(calendar);
+		frame.getContentPane().add(calendar);
 
 		scrollPane_2 = new JScrollPane();
 		scrollPane_2.setBounds(80, 184, 20, 155);
-		getContentPane().add(scrollPane_2);
+		frame.getContentPane().add(scrollPane_2);
 		
 		JLabel lblNewLabel = new JLabel("Selecione uma data");
 		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 11));
 		lblNewLabel.setBounds(12, 12, 223, 25);
-		getContentPane().add(lblNewLabel);
+		frame.getContentPane().add(lblNewLabel);
 		
 		List<Paciente> pacientes = PacienteDAO.getInstance().findAll();
 		
@@ -242,24 +248,24 @@ public class AgendamentoExameWindow extends JFrame {
 		comboBoxPacientes.setEnabled(true);
 		comboBoxPacientes.setBounds(247, 34, 273, 19);
 		
-		getContentPane().add(comboBoxPacientes);
+		frame.getContentPane().add(comboBoxPacientes);
 		
 		JLabel lblNewLabel_5 = new JLabel("Selecione o paciente");
 		lblNewLabel_5.setFont(new Font("Dialog", Font.BOLD, 11));
 		lblNewLabel_5.setBounds(247, 16, 187, 15);
-		getContentPane().add(lblNewLabel_5);
+		frame.getContentPane().add(lblNewLabel_5);
 
 		JComboBox comboBoxMedicos = new JComboBox();
 		this.currentDoctors = (DefaultComboBoxModel)comboBoxMedicos.getModel();
 		comboBoxMedicos.setEditable(false);
 		comboBoxMedicos.setEnabled(true);
 		comboBoxMedicos.setBounds(247, 74, 273, 19);
-		getContentPane().add(comboBoxMedicos);
+		frame.getContentPane().add(comboBoxMedicos);
 		
 		JLabel lblNewLabel_7 = new JLabel("Selecione o médico");
 		lblNewLabel_7.setFont(new Font("Dialog", Font.BOLD, 11));
 		lblNewLabel_7.setBounds(247, 56, 187, 15);
-		getContentPane().add(lblNewLabel_7);
+		frame.getContentPane().add(lblNewLabel_7);
 
 		JComboBox comboBoxEquips = new JComboBox();
 		this.workingEquips = (DefaultComboBoxModel)comboBoxEquips.getModel();	
@@ -267,18 +273,18 @@ public class AgendamentoExameWindow extends JFrame {
 		comboBoxEquips.setEnabled(true);
 		comboBoxEquips.setBounds(247, 114, 273, 19);
 	
-		getContentPane().add(comboBoxEquips);
+		frame.getContentPane().add(comboBoxEquips);
 		
 		JLabel lblNewLabel_8 = new JLabel("Selecione o equipamento");
 		lblNewLabel_8.setFont(new Font("Dialog", Font.BOLD, 11));
 		lblNewLabel_8.setBounds(247, 96, 187, 15);
-		getContentPane().add(lblNewLabel_8);
+		frame.getContentPane().add(lblNewLabel_8);
 		
 		
 		JLabel lblNewLabel_3 = new JLabel("Forma de atendimento");
 		lblNewLabel_3.setFont(new Font("Dialog", Font.BOLD, 11));
 		lblNewLabel_3.setBounds(247, 147, 187, 15);
-		getContentPane().add(lblNewLabel_3);
+		frame.getContentPane().add(lblNewLabel_3);
 		
 		JRadioButton convenioRadio = new JRadioButton("Convênio");
 		convenioRadio.setSelected(true);
@@ -294,7 +300,7 @@ public class AgendamentoExameWindow extends JFrame {
 		convenioRadio.setFont(new Font("Dialog", Font.BOLD, 11));
 		buttonGroup.add(convenioRadio);
 		convenioRadio.setBounds(243, 160, 90, 23);
-		getContentPane().add(convenioRadio);
+		frame.getContentPane().add(convenioRadio);
 		
 		JRadioButton particularRadio = new JRadioButton("Particular");
 		particularRadio.addMouseListener(new MouseAdapter() {
@@ -310,7 +316,7 @@ public class AgendamentoExameWindow extends JFrame {
 		particularRadio.setFont(new Font("Dialog", Font.BOLD, 11));
 		buttonGroup.add(particularRadio);
 		particularRadio.setBounds(375, 160, 149, 23);
-		getContentPane().add(particularRadio);
+		frame.getContentPane().add(particularRadio);
 		
 		JButton voltarButton = new JButton("Voltar");
 		voltarButton.setBounds(12, 354, 117, 25);
@@ -318,15 +324,15 @@ public class AgendamentoExameWindow extends JFrame {
 		   @Override
 		   public void mouseReleased(MouseEvent e) {
 			try {
-				setVisible(false);
-				dispose();
+				frame.setVisible(false);
+				frame.dispose();
 			} catch (Exception f) {
-			 System.exit(0);
+				System.exit(0);
 			}
 		   }
 		});
 
-		getContentPane().add(voltarButton);
+		frame.getContentPane().add(voltarButton);
 		
 		JButton agendarButton = new JButton("Agendar");
 		agendarButton.addMouseListener(new MouseAdapter() {
@@ -378,11 +384,11 @@ public class AgendamentoExameWindow extends JFrame {
 					mode = 3;
 			
 				pagamentoWindow.setVisible(true, mode, agenda, convenio, procedimento, paciente);
-				dispose();
+				frame.dispose();
 			}
 		});
 		agendarButton.setBounds(403, 354, 117, 25);
-		getContentPane().add(agendarButton);
+		frame.getContentPane().add(agendarButton);
 	}
 
 	private void fetchEquips() {
@@ -399,5 +405,9 @@ public class AgendamentoExameWindow extends JFrame {
 			if (equip.getStatusFuncionamento())
 				workingEquips.addElement(equip);
 		}
+	}
+	
+	public void showFrame() {
+		frame.setVisible(true);
 	}
 }

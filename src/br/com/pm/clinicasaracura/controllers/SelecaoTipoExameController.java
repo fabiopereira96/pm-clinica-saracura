@@ -28,6 +28,6 @@ public class SelecaoTipoExameController implements SelectionController<TipoExame
 		AgendamentoExameWindow agendamentoExameWindow = new AgendamentoExameWindow();
 
 		agendamentoExameWindow.setTipoExame(e.getIdTipoExame());
-		agendamentoExameWindow.setVisible(true);
+		agendamentoExameWindow.showFrame();
 	}
 }

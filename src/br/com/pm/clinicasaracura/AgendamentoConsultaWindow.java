@@ -6,6 +6,7 @@ import javax.swing.JLabel;
 
 import br.com.pm.clinicasaracura.dao.*;
 import br.com.pm.clinicasaracura.entity.*;
+import br.com.pm.clinicasaracura.controllers.*;
 
 import com.toedter.calendar.JCalendar;
 import javax.swing.JList;
@@ -30,34 +31,38 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 
-@SuppressWarnings({ "rawtypes", "serial" })
-public class AgendamentoConsultaWindow extends JFrame {
+@SuppressWarnings({ "rawtypes" })
+public class AgendamentoConsultaWindow {
 	
+	private JFrame frame;
+
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private final ButtonGroup buttonGroup_1 = new ButtonGroup();
 	
-	private PagamentoWindow pagamentoWindow = new PagamentoWindow<AgendaMedica>();
+	private PagamentoWindow pagamentoWindow = new PagamentoWindow<AgendaMedica, PgtoAgendaConsultaController>(
+		new PgtoAgendaConsultaController()
+	);
 	
 	private int crmMedico;
 	
-	public AgendamentoConsultaWindow() {
+	public AgendamentoConsultaWindow(int crmMedico) {
+		this.crmMedico = crmMedico;
 		initialize();
 	}
 
 	@SuppressWarnings({ "unchecked" })
-	private void initialize() {
-		crmMedico = -1;
-		
-		setResizable(false);
-		setBounds(100, 100, 535, 409);
-		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		getContentPane().setLayout(null);
-		setTitle("Agendamento de consulta");
+	private void initialize() {		
+		frame = new JFrame();
+		frame.setResizable(false);
+		frame.setBounds(100, 100, 535, 409);
+		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		frame.setTitle("Agendamento de consulta");
 
 		JPanel particularPanel = new JPanel();
 		particularPanel.setVisible(false);
 		particularPanel.setBounds(247, 184, 273, 155);
-		getContentPane().add(particularPanel);
+		frame.getContentPane().add(particularPanel);
 		particularPanel.setLayout(null);
 		
 		JLabel lblNewLabel_6 = new JLabel("Forma de pagamento");
@@ -93,7 +98,7 @@ public class AgendamentoConsultaWindow extends JFrame {
 		
 		JPanel convenioPanel = new JPanel();
 		convenioPanel.setBounds(247, 184, 273, 155);
-		getContentPane().add(convenioPanel);
+		frame.getContentPane().add(convenioPanel);
 		convenioPanel.setLayout(null);
 		
 		List<Convenio> convenios = ConvenioDAO.getInstance().findAll();
@@ -118,7 +123,7 @@ public class AgendamentoConsultaWindow extends JFrame {
 				
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(12, 208, 223, 131);
-		getContentPane().add(scrollPane);
+		frame.getContentPane().add(scrollPane);
 		
 		JList horariosList = new JList();
 	    horariosList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -174,12 +179,12 @@ public class AgendamentoConsultaWindow extends JFrame {
 			}
 		});
 		calendar.setBounds(12, 34, 223, 138);
-		getContentPane().add(calendar);
+		frame.getContentPane().add(calendar);
 		
 		JLabel lblNewLabel = new JLabel("Selecione uma data e um horário");
 		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 11));
 		lblNewLabel.setBounds(12, 12, 223, 25);
-		getContentPane().add(lblNewLabel);
+		frame.getContentPane().add(lblNewLabel);
 		
 		List<Paciente> pacientes = PacienteDAO.getInstance().findAll();
 		
@@ -188,17 +193,17 @@ public class AgendamentoConsultaWindow extends JFrame {
 		comboBoxPacientes.setEnabled(true);
 		comboBoxPacientes.setBounds(247, 34, 273, 19);
 		
-		getContentPane().add(comboBoxPacientes);
+		frame.getContentPane().add(comboBoxPacientes);
 		
 		JLabel lblNewLabel_5 = new JLabel("Matricula do Paciente");
 		lblNewLabel_5.setFont(new Font("Dialog", Font.BOLD, 11));
 		lblNewLabel_5.setBounds(247, 16, 187, 15);
-		getContentPane().add(lblNewLabel_5);
+		frame.getContentPane().add(lblNewLabel_5);
 		
 		JLabel lblNewLabel_3 = new JLabel("Forma de atendimento");
 		lblNewLabel_3.setFont(new Font("Dialog", Font.BOLD, 11));
 		lblNewLabel_3.setBounds(247, 137, 187, 15);
-		getContentPane().add(lblNewLabel_3);
+		frame.getContentPane().add(lblNewLabel_3);
 		
 		JRadioButton convenioRadio = new JRadioButton("Convênio");
 		buttonGroup.add(convenioRadio);
@@ -214,7 +219,7 @@ public class AgendamentoConsultaWindow extends JFrame {
 		});
 		convenioRadio.setFont(new Font("Dialog", Font.BOLD, 11));
 		convenioRadio.setBounds(243, 160, 90, 23);
-		getContentPane().add(convenioRadio);
+		frame.getContentPane().add(convenioRadio);
 		
 		JRadioButton particularRadio = new JRadioButton("Particular");
 		particularRadio.addMouseListener(new MouseAdapter() {
@@ -229,16 +234,16 @@ public class AgendamentoConsultaWindow extends JFrame {
 		particularRadio.setFont(new Font("Dialog", Font.BOLD, 11));
 		buttonGroup.add(particularRadio);
 		particularRadio.setBounds(375, 160, 149, 23);
-		getContentPane().add(particularRadio);
+		frame.getContentPane().add(particularRadio);
 		
 		JButton voltarButton = new JButton("Voltar");
 		voltarButton.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
-				dispose();
+				frame.dispose();
 			}
 		});
 		voltarButton.setBounds(12, 354, 117, 25);
-		getContentPane().add(voltarButton);
+		frame.getContentPane().add(voltarButton);
 		
 		JButton agendarButton = new JButton("Agendar");
 		agendarButton.addMouseListener(new MouseAdapter() {
@@ -292,7 +297,7 @@ public class AgendamentoConsultaWindow extends JFrame {
 			
 				pagamentoWindow.setVisible(true, mode, agenda, convenio, procedimento, paciente);
 				
-				dispose();
+				frame.dispose();
 			}
 		});
 		
@@ -301,16 +306,15 @@ public class AgendamentoConsultaWindow extends JFrame {
 			}
 		});
 		agendarButton.setBounds(403, 354, 117, 25);
-		getContentPane().add(agendarButton);
+		frame.getContentPane().add(agendarButton);
 		
 		JLabel lblNewLabel_1 = new JLabel("Horários disponíveis");
 		lblNewLabel_1.setFont(new Font("Dialog", Font.BOLD, 11));
 		lblNewLabel_1.setBounds(12, 181, 217, 15);
-		getContentPane().add(lblNewLabel_1);
+		frame.getContentPane().add(lblNewLabel_1);
 	}
 
-	public void setVisible(boolean t, final int crmMedico) {
-		this.crmMedico     = crmMedico; 
-		setVisible(t);
+	public void showFrame() { 
+		frame.setVisible(true);
 	}
 }

@@ -17,7 +17,7 @@ import br.com.pm.clinicasaracura.dao.AgendaMedicaDAO;
 import br.com.pm.clinicasaracura.dao.AgendaEquipamentoDAO;
 import br.com.pm.clinicasaracura.entity.AgendaMedica;
 import br.com.pm.clinicasaracura.entity.AgendaEquipamento;
-
+import br.com.pm.clinicasaracura.controllers.*;
 
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -34,9 +34,10 @@ import java.awt.Color;
 import javax.swing.DefaultComboBoxModel;
 
 @SuppressWarnings("rawtypes")
-public class PagamentoWindow<TAgenda> {
+public class PagamentoWindow<TAgenda, TController extends PaymentController> {
 
 	private JFrame frame;
+	
 	private JTextField credito_nCartaoField;
 	private JTextField credito_cvcTextField;
 	private JTextField credito_nomeCartaoTextField;
@@ -61,8 +62,10 @@ public class PagamentoWindow<TAgenda> {
 	
 	private int mode;
 	private String valor = "";
+	private TController ctl;
 
-	public PagamentoWindow() {
+	public PagamentoWindow(TController ctl) {
+		this.ctl = ctl;
 		initialize();
 	}
 
@@ -73,6 +76,7 @@ public class PagamentoWindow<TAgenda> {
 		frame.setResizable(false);
 		frame.getContentPane().setSize(new Dimension(500, 500));
 		frame.getContentPane().setLayout(null);
+		frame.setTitle(ctl.getTitle());
 		creditoPanel.setVisible(false);
 		chequePanel.setVisible(false);
 		debitoPanel.setVisible(false);
@@ -234,16 +238,14 @@ public class PagamentoWindow<TAgenda> {
 				
 			    ActionListener listener = new ActionListener(){
 			        public void actionPerformed(ActionEvent event){
-						if (processPagamentoInstituicao()) {
-							if (tipoAgenda == 2) {
-								AgendaEquipamentoDAO.getInstance().persist((AgendaEquipamento)agenda);
-							} else {
-								AgendaMedicaDAO.getInstance().persist((AgendaMedica)agenda);
-							}
+			        	boolean status = processPagamentoInstituicao();
 
-							emitirRecibo();
-						}
-						
+			        	if (status) {
+				        	ctl.paymentFinished(true, agenda);
+			        		emitirRecibo();
+			        	} else
+				        	ctl.paymentFinished(false, agenda);
+	
 						resetWindow();
 						frame.dispose();
 			        }
@@ -274,11 +276,11 @@ public class PagamentoWindow<TAgenda> {
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
-	
-	public boolean processPagamentoInstituicao () {
+
+	public boolean processPagamentoInstituicao() {
 		Random r = new Random();
 		int dice = r.nextInt(10);
-				
+
 		if (dice == 9) {
 			JOptionPane.showMessageDialog(null, "Pagamento não autorizado pela instituição!");
 			return false;
@@ -288,12 +290,12 @@ public class PagamentoWindow<TAgenda> {
 		}
 	}
 	
-	public void processPagamentoDinheiro () {
+	public void processPagamentoDinheiro() {
 			valor = JOptionPane.showInputDialog("Valor cobrado");
 			JOptionPane.showMessageDialog(null, "Agendado!");
 	}
 	
-	public boolean processPagamentoConvenio (String convenio, String procedimento, String paciente) {
+	public boolean processPagamentoConvenio(String convenio, String procedimento, String paciente) {
 		Random r = new Random();
 		int dice = r.nextInt(12);
 				
@@ -311,12 +313,11 @@ public class PagamentoWindow<TAgenda> {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void setVisible( boolean b, int mode, AgendaMedica agenda
+	public void setVisible( boolean b, int mode, TAgenda agenda
 			              , String convenio, String procedimento
 			              , String paciente) {
 		
 		this.agenda = (TAgenda)agenda;
-		this.tipoAgenda = 1;
 		this.mode = mode;
 		
 		switch (mode) {
@@ -331,51 +332,17 @@ public class PagamentoWindow<TAgenda> {
 			break;
 		case (3) :
 			processPagamentoDinheiro();
-			AgendaMedicaDAO.getInstance().persist((AgendaMedica)agenda);
+			ctl.paymentFinished(true, agenda);
 			emitirRecibo();
 			return;
 		case (4) :
-			if (processPagamentoConvenio(convenio, procedimento, paciente))  {
-				AgendaMedicaDAO.getInstance().persist((AgendaMedica)agenda);
+			boolean status = processPagamentoConvenio(convenio, procedimento, paciente);
+			if (status) {
+				ctl.paymentFinished(true, agenda);
 				emitirRecibo();
-			}
+			} else
+				ctl.paymentFinished(false, agenda);
 
-			return;
-		}
-		
-		frame.setVisible(b);
-	}
-
-	@SuppressWarnings("unchecked")
-	public void setVisible( boolean b, int mode, AgendaEquipamento agenda
-				            , String convenio, String procedimento
-				            , String paciente) {
-		
-		this.agenda = (TAgenda)agenda;
-		this.tipoAgenda = 2;
-		this.mode = mode;
-
-		switch (mode) {
-		case (0) :
-			chequePanel.setVisible(true);
-			break;
-		case (1) :
-			creditoPanel.setVisible(true);				
-			break;
-		case (2) :
-			debitoPanel.setVisible(true);			
-			break;
-		case (3) :
-			System.out.print("Hey!");
-			processPagamentoDinheiro();
-			AgendaEquipamentoDAO.getInstance().persist((AgendaEquipamento)agenda);
-			emitirRecibo();
-			return;
-		case (4) :
-			if (processPagamentoConvenio(convenio, procedimento, paciente))  {
-				AgendaEquipamentoDAO.getInstance().persist((AgendaEquipamento)agenda);
-				emitirRecibo();
-			}
 			return;
 		}
 		
@@ -445,7 +412,6 @@ public class PagamentoWindow<TAgenda> {
 			}
 			
 			writer.close();
-			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
