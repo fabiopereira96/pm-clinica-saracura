@@ -64,7 +64,7 @@ public class SelecaoWindow<TItem, TController extends SelectionController> exten
 		
 		/* Botões */
 		JLabel lblAgendaMedica = new JLabel(ctl.getLabel());
-		lblAgendaMedica.setBounds(12, 12, 130, 25);
+		lblAgendaMedica.setBounds(12, 12, 416, 25);
 		getContentPane().add(lblAgendaMedica);
 
 		JButton btnVoltar = new JButton("Voltar");
