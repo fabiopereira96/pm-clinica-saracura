@@ -19,8 +19,10 @@ import javax.swing.DefaultListModel;
 import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowEvent;
 
-@SuppressWarnings({ "serial", "rawtypes" })
-public class SelecaoWindow<TItem, TController extends SelectionController> extends JFrame {
+@SuppressWarnings({ "rawtypes" })
+public class SelecaoWindow<TItem, TController extends SelectionController> {
+	
+	private JFrame frame;
 	
 	private TController ctl;
 	private List<TItem> listData;
@@ -33,7 +35,8 @@ public class SelecaoWindow<TItem, TController extends SelectionController> exten
 		this.listModel = new DefaultListModel();
 		
 		initialize();
-		addWindowFocusListener(new WindowFocusListener() {
+		frame.addWindowFocusListener(new WindowFocusListener() {
+			@SuppressWarnings("unchecked")
 			public void windowGainedFocus(WindowEvent e) {
 				// Refreshes the list so it keeps track of newly added entries
 				listModel.removeAllElements();
@@ -53,10 +56,12 @@ public class SelecaoWindow<TItem, TController extends SelectionController> exten
 
 	@SuppressWarnings("unchecked")
 	private void initialize() {
-		setResizable(false);
-		setTitle(ctl.getTitle());
-		setBounds(100, 100, 450, 300);
-		getContentPane().setLayout(null);
+		frame = new JFrame();
+		
+		frame.setResizable(false);
+		frame.setTitle(ctl.getTitle());
+		frame.setBounds(100, 100, 450, 300);
+		frame.getContentPane().setLayout(null);
 
 		listData = ctl.getElements();
 		
@@ -69,18 +74,18 @@ public class SelecaoWindow<TItem, TController extends SelectionController> exten
 		/* Botões */
 		JLabel lblAgendaMedica = new JLabel(ctl.getLabel());
 		lblAgendaMedica.setBounds(12, 12, 416, 25);
-		getContentPane().add(lblAgendaMedica);
+		frame.getContentPane().add(lblAgendaMedica);
 
 		JButton btnVoltar = new JButton("Voltar");
 		btnVoltar.setBounds(12, 237, 98, 25);
 		btnVoltar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				dispose();
+				frame.dispose();
 			}
 		});
 
-		getContentPane().add(btnVoltar);
+		frame.getContentPane().add(btnVoltar);
 		
 		btnSelect = new JButton(ctl.getBtnText());
 		btnSelect.setBounds(290, 237, 148, 25);
@@ -102,13 +107,17 @@ public class SelecaoWindow<TItem, TController extends SelectionController> exten
 				btnSelect.setEnabled(true);
 			}
 		});
-		getContentPane().add(btnSelect);
+		frame.getContentPane().add(btnSelect);
 		
 		/* Scrollpane de seleção */
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(12, 37, 416, 175);
-		getContentPane().add(scrollPane);
+		frame.getContentPane().add(scrollPane);
 	
 		scrollPane.setViewportView(myJList);
+	}
+	
+	public void showFrame() {
+		frame.setVisible(true);
 	}
 }

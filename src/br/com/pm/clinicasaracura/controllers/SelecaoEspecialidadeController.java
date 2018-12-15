@@ -32,6 +32,6 @@ public class SelecaoEspecialidadeController implements SelectionController<Espec
 				new SelecaoMedicoController(spec)
 			  );
 
-		selecaoMedicoWindow.setVisible(true);
+		selecaoMedicoWindow.showFrame();
 	}
 }

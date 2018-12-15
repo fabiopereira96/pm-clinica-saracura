@@ -11,7 +11,7 @@ import br.com.pm.clinicasaracura.controllers.SelecaoAgendaExameController;
 import br.com.pm.clinicasaracura.entity.AgendaMedica;
 import br.com.pm.clinicasaracura.entity.AgendaEquipamento;
 
-@SuppressWarnings({ "rawtypes", "serial" })
+@SuppressWarnings({ "rawtypes" })
 public class SelecaoTipoAgendaWindow {
 
 	private JFrame frame;
@@ -42,7 +42,7 @@ public class SelecaoTipoAgendaWindow {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				try {
-					selecaoAgendaConsultaWindow.setVisible(true);
+					selecaoAgendaConsultaWindow.showFrame();
 				} catch (Exception f) {
 					System.exit(0);
 				}
@@ -56,7 +56,7 @@ public class SelecaoTipoAgendaWindow {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				try {
-					selecaoAgendaExameWindow.setVisible(true);
+					selecaoAgendaExameWindow.showFrame();
 				} catch (Exception f) {
 					System.exit(0);
 				}

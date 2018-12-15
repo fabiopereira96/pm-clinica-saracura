@@ -44,13 +44,6 @@ public class MainWindow {
 	
 	private void initialize() {
 		/* Setup */
-		try {
-			UIManager.setLookAndFeel(new MetalLookAndFeel());
-			JFrame.setDefaultLookAndFeelDecorated(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	
 		frame = new JFrame();
 		frame.getContentPane().setSize(new Dimension(500, 300));
 		frame.setSize(new Dimension(500, 380));
@@ -68,7 +61,7 @@ public class MainWindow {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				try {
-					especialidadesWindow.setVisible(true);
+					especialidadesWindow.showFrame();
 				} catch (Exception f) {
 					System.exit(0);
 				}
@@ -84,7 +77,7 @@ public class MainWindow {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				try {
-					selecaoTipoExameWindow.setVisible(true);
+					selecaoTipoExameWindow.showFrame();
 				} catch (Exception f) {
 					System.exit(0);
 				}
