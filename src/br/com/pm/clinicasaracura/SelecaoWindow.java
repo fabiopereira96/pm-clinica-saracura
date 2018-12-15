@@ -40,8 +40,8 @@ public class SelecaoWindow<TItem, TController extends SelectionController> exten
 				listData = ctl.getElements();
 				
 				for (TItem agenda : listData) {
-				    listModel.addElement(agenda);
-				}
+					listModel.addElement(agenda);				
+				}				
 				
 				btnSelect.setEnabled(false);
 			}

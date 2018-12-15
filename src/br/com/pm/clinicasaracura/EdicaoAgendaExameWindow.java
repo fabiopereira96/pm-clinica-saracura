@@ -30,6 +30,8 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 
 public class EdicaoAgendaExameWindow {
 
@@ -203,8 +205,9 @@ public class EdicaoAgendaExameWindow {
 		voltarButton.setBounds(12, 354, 117, 25);
 		frame.getContentPane().add(voltarButton);
 		
-		JButton agendarButton = new JButton("Atualizar");
-		agendarButton.addActionListener(new ActionListener() {
+		JButton atualizarButton = new JButton("Atualizar");
+		atualizarButton.setEnabled(false);
+		atualizarButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(  horariosList.isSelectionEmpty()
 					      || comboBoxPacientes.getSelectedItem().toString() == ""
@@ -235,8 +238,14 @@ public class EdicaoAgendaExameWindow {
 						frame.dispose();
 			}
 		});
-		agendarButton.setBounds(403, 354, 117, 25);
-		frame.getContentPane().add(agendarButton);
+		atualizarButton.setBounds(403, 354, 117, 25);
+		frame.getContentPane().add(atualizarButton);
+		
+		horariosList.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				atualizarButton.setEnabled(true);
+			}
+		});
 		
 		JButton btnDeletar = new JButton("Deletar");
 		btnDeletar.addMouseListener(new MouseAdapter() {

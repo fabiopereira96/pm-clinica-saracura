@@ -1,6 +1,7 @@
 package br.com.pm.clinicasaracura.entity;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Basic;
@@ -65,6 +66,7 @@ public class AgendaMedica implements Serializable {
 
 	@Override
 	public String toString() {
-		return diaAgendamento + " - " + medico;
+		SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		return f.format(diaAgendamento) + " - " + medico;
 	}
 }

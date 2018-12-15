@@ -32,6 +32,8 @@ import java.util.Date;
 import java.util.List;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class EdicaoAgendaConsultaWindow {
@@ -150,8 +152,9 @@ public class EdicaoAgendaConsultaWindow {
 		voltarButton.setBounds(12, 351, 117, 25);
 		frame.getContentPane().add(voltarButton);
 		
-		JButton agendarButton = new JButton("Atualizar");
-		agendarButton.addActionListener(new ActionListener() {
+		JButton atualizarButton = new JButton("Atualizar");
+		atualizarButton.setEnabled(false);
+		atualizarButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(  horariosList.isSelectionEmpty()
 			      || comboBoxPacientes.getSelectedItem().toString() == ""
@@ -182,8 +185,14 @@ public class EdicaoAgendaConsultaWindow {
 				frame.dispose();
 			}
 		});
-		agendarButton.setBounds(402, 351, 117, 25);
-		frame.getContentPane().add(agendarButton);
+		atualizarButton.setBounds(402, 351, 117, 25);
+		frame.getContentPane().add(atualizarButton);
+		
+		horariosList.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				atualizarButton.setEnabled(true);
+			}
+		});
 		
 		JButton btnDeletar = new JButton("Deletar");
 		btnDeletar.addMouseListener(new MouseAdapter() {
