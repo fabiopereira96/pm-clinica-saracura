@@ -40,7 +40,7 @@ public class EdicaoAgendaExameWindow {
 		
 		frame = new JFrame();
 		frame.setResizable(false);
-		frame.setBounds(100, 100, 535, 409);
+		frame.setBounds(100, 100, 535, 420);
 		frame.getContentPane().setLayout(null);
 		frame.setTitle("Atualização de agenda (exame)");
 		

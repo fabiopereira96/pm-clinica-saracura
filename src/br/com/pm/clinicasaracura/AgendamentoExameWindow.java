@@ -101,7 +101,7 @@ public class AgendamentoExameWindow {
 	@SuppressWarnings("unchecked")
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 535, 409);
+		frame.setBounds(100, 100, 535, 420);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setTitle("Agendamento de exame de imagem");

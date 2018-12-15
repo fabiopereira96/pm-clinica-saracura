@@ -88,6 +88,7 @@ public class SelecaoWindow<TItem, TController extends SelectionController> exten
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				if (!btnSelect.isEnabled()) return;
+				
 				try {
 					int idx = myJList.getSelectedIndex();
 					ctl.selectedElement(listData.get(idx));

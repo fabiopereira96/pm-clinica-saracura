@@ -49,7 +49,7 @@ public class EdicaoAgendaConsultaWindow {
 		frame = new JFrame();
 		
 		frame.setResizable(false);
-		frame.setBounds(100, 100, 535, 409);
+		frame.setBounds(100, 100, 535, 420);
 		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setTitle("Atualização de agenda (consulta)");
