@@ -239,6 +239,14 @@ public class EdicaoAgendaExameWindow {
 		frame.getContentPane().add(agendarButton);
 		
 		JButton btnDeletar = new JButton("Deletar");
+		btnDeletar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				AgendaEquipamentoDAO.getInstance().remove(agenda);
+				JOptionPane.showMessageDialog(null, "Removido!");
+				frame.dispose();
+			}
+		});
 		btnDeletar.setBounds(215, 351, 98, 25);
 		frame.getContentPane().add(btnDeletar);
 		
