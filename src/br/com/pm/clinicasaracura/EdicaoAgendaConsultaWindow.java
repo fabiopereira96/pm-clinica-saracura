@@ -12,17 +12,23 @@ import br.com.pm.clinicasaracura.entity.*;
 
 import com.toedter.calendar.JCalendar;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Date;
 import java.util.List;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -36,14 +42,12 @@ public class EdicaoAgendaConsultaWindow extends JFrame {
 	private AgendaMedica agenda;
 	
 	public EdicaoAgendaConsultaWindow(AgendaMedica agenda) {
+		setResizable(false);
 		this.agenda = agenda;
 		initialize();
 	}
 
-	private void initialize() {		
-		// TODO: Use this.agenda to fill initial values.
-
-		setResizable(false);
+	private void initialize() {
 		setBounds(100, 100, 535, 409);
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		getContentPane().setLayout(null);
@@ -107,22 +111,64 @@ public class EdicaoAgendaConsultaWindow extends JFrame {
 		lblNewLabel_4.setBounds(12, 12, 249, 15);
 		convenioPanel.add(lblNewLabel_4);
 		
-		JCalendar calendar = new JCalendar();
-		calendar.getDayChooser().getDayPanel().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				
-			}
-		});
-		calendar.setBounds(12, 34, 223, 138);
-		getContentPane().add(calendar);
-		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(12, 184, 223, 155);
 		getContentPane().add(scrollPane);
 		
 		JList horariosList = new JList();
 		scrollPane.setViewportView(horariosList);
+		
+		JCalendar calendar = new JCalendar();
+		calendar.getDayChooser().addPropertyChangeListener(new PropertyChangeListener() {
+			@SuppressWarnings({ "deprecation" })
+			public void propertyChange(PropertyChangeEvent evt) {
+				boolean printHorarios = false;
+				int selectedDiaId = Utils.getDayId(calendar.getDate().toString());
+				Medico selectedMedico = MedicoDAO.getInstance().getById(agenda.getMedico().getCrm());
+				List<DiaAtendimento> diasAtendimentoList = selectedMedico.getDiaAtendimento();
+				int intervaloAtendimento = Integer.parseInt(selectedMedico.getIntervaloAtendimento().substring(3, 5));
+				int horarioAtendimentoHora   = Integer.parseInt(selectedMedico.getHorarioAtendimento().substring(0, 2));
+				int horarioAtendimentoMinuto = Integer.parseInt(selectedMedico.getHorarioAtendimento().substring(3, 5));
+
+				List<AgendaMedica> selectedMedicoAgenda = AgendaMedicaDAO.getInstance().getByMedico(agenda.getMedico().getCrm());
+				
+				for (DiaAtendimento d : diasAtendimentoList) {
+					if (d.getIdDia() == selectedDiaId) {
+						printHorarios = true;
+						break;
+					}
+				}
+				
+				if (printHorarios) {
+					Date compareDate = calendar.getDate();
+									
+					int currentHora = horarioAtendimentoHora;
+					int currentMin  = horarioAtendimentoMinuto;
+					
+					DefaultListModel listModel = new DefaultListModel();
+														
+					for (int i = 0; (i*intervaloAtendimento) <= 360; i++) {
+						currentHora += (currentMin + intervaloAtendimento) / 60;
+						currentMin = (horarioAtendimentoMinuto + i*intervaloAtendimento) % 60;
+						
+						compareDate.setHours(currentHora);
+						compareDate.setMinutes(currentMin);
+						compareDate.setSeconds(0);
+						
+						if (Utils.thisHorarioIsFree(selectedMedicoAgenda, compareDate))
+							listModel.addElement(String.format("%02d", currentHora) + ":" + String.format("%02d", currentMin));
+					}
+					
+					horariosList.setModel(listModel);
+				}
+				else {
+					DefaultListModel listModel = new DefaultListModel();
+					horariosList.setModel(listModel);
+				}
+			}
+		});
+		calendar.setBounds(12, 34, 223, 138);
+		getContentPane().add(calendar);
 		
 		JLabel lblNewLabel = new JLabel("Selecione uma data e um horário");
 		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 11));
@@ -210,13 +256,34 @@ public class EdicaoAgendaConsultaWindow extends JFrame {
 		JButton agendarButton = new JButton("Atualizar");
 		agendarButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AgendaMedicaDAO.getInstance().remove(agenda);
-				
+				if(  horariosList.isSelectionEmpty()
+			      || comboBoxPacientes.getSelectedItem().toString() == ""
+				  || (!convenioRadio.isSelected() && !particularRadio.isSelected())
+				) {
+					JOptionPane.showMessageDialog(null, "Selecione todos os campos!");
+					return;
+				}
+								
 				AgendaMedica novaAgenda = new AgendaMedica();
 				
-				// TODO: fill novaAgenda with new data.
+				int horaAgendamento   = Integer.parseInt(horariosList.getSelectedValue().toString().substring(0,2));
+				int minutoAgendamento = Integer.parseInt(horariosList.getSelectedValue().toString().substring(3,5));
+				
+				Date diaAgendamento = calendar.getDate();
+				diaAgendamento.setHours(horaAgendamento);
+				diaAgendamento.setMinutes(minutoAgendamento);
+				diaAgendamento.setSeconds(0);
+						
+				novaAgenda.setDiaAgendamento(diaAgendamento);
+				novaAgenda.setMedico(MedicoDAO.getInstance().getById(agenda.getMedico().getCrm()));
+					
+				novaAgenda.setPaciente(PacienteDAO.getInstance().getById(Integer.parseInt(comboBoxPacientes.getSelectedItem().toString().split(" ")[0])));
 				
 				AgendaMedicaDAO.getInstance().persist(novaAgenda);
+				AgendaMedicaDAO.getInstance().remove(agenda);
+				
+				JOptionPane.showMessageDialog(null, "Atualizado!");
+				dispose();
 			}
 		});
 		agendarButton.setBounds(403, 354, 117, 25);
@@ -226,13 +293,20 @@ public class EdicaoAgendaConsultaWindow extends JFrame {
 		btnDeletar.setBounds(215, 351, 98, 25);
 		getContentPane().add(btnDeletar);
 		
-		JLabel lblMedicoResponsavel = new JLabel("Medico Responsavel");
-		lblMedicoResponsavel.setBounds(247, 61, 130, 15);
+		JLabel lblMedicoResponsavel = new JLabel("Médico Responsável");
+		lblMedicoResponsavel.setFont(new Font("Dialog", Font.BOLD, 11));
+		lblMedicoResponsavel.setBounds(247, 61, 165, 15);
 		getContentPane().add(lblMedicoResponsavel);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setEditable(true);
-		comboBox.setBounds(247, 75, 273, 19);
-		getContentPane().add(comboBox);
+		List<Medico> medicos = MedicoDAO.getInstance().findAll();
+		
+		JComboBox comboBoxMedicos = new JComboBox(medicos.toArray());
+		comboBoxMedicos.setEditable(true);
+		comboBoxMedicos.setBounds(247, 75, 273, 19);
+		getContentPane().add(comboBoxMedicos);
+		
+		calendar.setDate(this.agenda.getDiaAgendamento());
+		comboBoxPacientes.setSelectedItem(this.agenda.getPaciente());
+		comboBoxMedicos.setSelectedItem(this.agenda.getMedico());
 	}
 }

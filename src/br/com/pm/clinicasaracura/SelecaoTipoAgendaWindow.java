@@ -31,6 +31,7 @@ public class SelecaoTipoAgendaWindow extends JFrame {
 
 	private void initialize() {
 		frame = new JFrame();
+		frame.setResizable(false);
 		frame.setBounds(100, 100, 272, 174);
 		frame.getContentPane().setLayout(null);
 
@@ -41,7 +42,7 @@ public class SelecaoTipoAgendaWindow extends JFrame {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				try {
-					selecaoAgendaExameWindow.setVisible(true);
+					selecaoAgendaConsultaWindow.setVisible(true);
 				} catch (Exception f) {
 					System.exit(0);
 				}
@@ -55,7 +56,7 @@ public class SelecaoTipoAgendaWindow extends JFrame {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				try {
-					selecaoAgendaConsultaWindow.setVisible(true);
+					selecaoAgendaExameWindow.setVisible(true);
 				} catch (Exception f) {
 					System.exit(0);
 				}

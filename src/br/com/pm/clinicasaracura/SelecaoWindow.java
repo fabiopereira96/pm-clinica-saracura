@@ -16,6 +16,8 @@ import br.com.pm.clinicasaracura.controllers.SelectionController;
 
 import javax.swing.JList;
 import javax.swing.DefaultListModel;
+import java.awt.event.WindowFocusListener;
+import java.awt.event.WindowEvent;
 
 @SuppressWarnings({ "serial", "rawtypes" })
 public class SelecaoWindow<TItem, TController extends SelectionController> extends JFrame {
@@ -23,9 +25,24 @@ public class SelecaoWindow<TItem, TController extends SelectionController> exten
 	private TController ctl;
 	private List<TItem> listData;
 	private DefaultListModel listModel;
+	JList myJList = new JList();
 
-	public SelecaoWindow(TController ctl) {
-		this.ctl = ctl;
+	public SelecaoWindow(TController ctll) {
+		addWindowFocusListener(new WindowFocusListener() {
+			public void windowGainedFocus(WindowEvent e) {
+				// Refreshes the list so it keeps track of newly added entries
+				listModel.removeAllElements();
+				listData = ctl.getElements();
+				
+				for (TItem agenda : listData) {
+				    listModel.addElement(agenda);
+				}
+			}
+			public void windowLostFocus(WindowEvent e) {
+			}
+		});
+		setResizable(false);
+		this.ctl = ctll;
 		this.listModel = new DefaultListModel();
 		
 		initialize();
@@ -39,7 +56,6 @@ public class SelecaoWindow<TItem, TController extends SelectionController> exten
 
 		listData = ctl.getElements();
 		
-		JList myJList = new JList();
 		for (TItem agenda : listData) {
 		    listModel.addElement(agenda);
 		}

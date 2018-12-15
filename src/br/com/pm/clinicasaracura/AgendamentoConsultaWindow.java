@@ -40,61 +40,6 @@ public class AgendamentoConsultaWindow extends JFrame {
 	
 	private int crmMedico;
 	
-	// The standard methods DON'T WORK
-	@SuppressWarnings("deprecation")
-	private boolean datesAreEqual(Date a, Date b) {
-		if (  a.getDate()     == b.getDate() 
-	       && a.getMonth()   == b.getMonth()
-	       && a.getYear()    == b.getYear()
-	       && a.getSeconds() == b.getSeconds()
-	       && a.getMinutes() == b.getMinutes()
-	       && a.getHours()   == b.getHours()) {
-			return true;
-		}
-		
-		return false;
-	}
-	
-	private int getDayId(String date) {
-		String day = date.substring(0, 3);
-		int dayid = 0;
-		
-		switch (day) {
-			case "Sun" :
-				dayid = 1;
-				break;
-			case "Mon" :
-				dayid = 2;
-				break;
-			case "Tue" :
-				dayid = 3;
-				break;
-			case "Wed" :
-				dayid = 4;
-				break;
-			case "Thu" :
-				dayid = 5;
-				break;
-			case "Fri" :
-				dayid = 6;
-				break;
-			case "Sat" :
-				dayid = 7;
-				break;
-		}
-		
-		return dayid;
-	}
-
-	private boolean thisHorarioIsFree (List<AgendaMedica> agenda, Date horario) {
-		for (AgendaMedica a : agenda) {
-			if(datesAreEqual(horario, a.getDiaAgendamento()))
-				return false;
-		}
-		
-		return true;
-	}
-	
 	public AgendamentoConsultaWindow() {
 		initialize();
 	}
@@ -184,7 +129,7 @@ public class AgendamentoConsultaWindow extends JFrame {
 			@SuppressWarnings({ "deprecation" })
 			public void propertyChange(PropertyChangeEvent evt) {
 				boolean printHorarios = false;
-				int selectedDiaId = getDayId(calendar.getDate().toString());
+				int selectedDiaId = Utils.getDayId(calendar.getDate().toString());
 				Medico selectedMedico = MedicoDAO.getInstance().getById(crmMedico);
 				List<DiaAtendimento> diasAtendimentoList = selectedMedico.getDiaAtendimento();
 				int intervaloAtendimento = Integer.parseInt(selectedMedico.getIntervaloAtendimento().substring(3, 5));
@@ -216,7 +161,7 @@ public class AgendamentoConsultaWindow extends JFrame {
 						compareDate.setMinutes(currentMin);
 						compareDate.setSeconds(0);
 						
-						if (thisHorarioIsFree(selectedMedicoAgenda, compareDate))
+						if (Utils.thisHorarioIsFree(selectedMedicoAgenda, compareDate))
 							listModel.addElement(String.format("%02d", currentHora) + ":" + String.format("%02d", currentMin));
 					}
 					
@@ -341,8 +286,9 @@ public class AgendamentoConsultaWindow extends JFrame {
 					mode = 1;
 				else if (debitoRadio.isSelected())
 					mode = 2;
-				else if (dinheiroRadio.isSelected())
+				else if (dinheiroRadio.isSelected()){
 					mode = 3;
+				}
 			
 				pagamentoWindow.setVisible(true, mode, agenda, convenio, procedimento, paciente);
 				

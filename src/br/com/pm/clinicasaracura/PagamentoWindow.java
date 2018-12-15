@@ -288,6 +288,11 @@ public class PagamentoWindow<TAgenda> {
 		}
 	}
 	
+	public void processPagamentoDinheiro () {
+			valor = JOptionPane.showInputDialog("Valor cobrado");
+			JOptionPane.showMessageDialog(null, "Agendado!");
+	}
+	
 	public boolean processPagamentoConvenio (String convenio, String procedimento, String paciente) {
 		Random r = new Random();
 		int dice = r.nextInt(12);
@@ -325,7 +330,8 @@ public class PagamentoWindow<TAgenda> {
 			debitoPanel.setVisible(true);			
 			break;
 		case (3) :
-			AgendaMedicaDAO.getInstance().persist(agenda);
+			processPagamentoDinheiro();
+			AgendaMedicaDAO.getInstance().persist((AgendaMedica)agenda);
 			emitirRecibo();
 			return;
 		case (4) :
@@ -360,6 +366,8 @@ public class PagamentoWindow<TAgenda> {
 			debitoPanel.setVisible(true);			
 			break;
 		case (3) :
+			System.out.print("Hey!");
+			processPagamentoDinheiro();
 			AgendaEquipamentoDAO.getInstance().persist((AgendaEquipamento)agenda);
 			emitirRecibo();
 			return;
