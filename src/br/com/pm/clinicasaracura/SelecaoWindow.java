@@ -43,10 +43,7 @@ public class SelecaoWindow<TItem, TController extends SelectionController> exten
 				    listModel.addElement(agenda);
 				}
 				
-				if (listData.size() > 0)
-					myJList.setSelectedIndex(0);
-				else
-					btnSelect.setEnabled(false);
+				btnSelect.setEnabled(false);
 			}
 			
 			public void windowLostFocus(WindowEvent e) {

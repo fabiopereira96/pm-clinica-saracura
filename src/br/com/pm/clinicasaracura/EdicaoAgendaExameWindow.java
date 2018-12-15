@@ -43,6 +43,7 @@ public class EdicaoAgendaExameWindow {
 		frame.setBounds(100, 100, 535, 409);
 		frame.getContentPane().setLayout(null);
 		frame.setTitle("Atualização de agenda (exame)");
+		
 //		JScrollPane scrollPane_1 = new JScrollPane();
 //		scrollPane_1.setBounds(12, 30, 249, 55);
 //		convenioPanel.add(scrollPane_1);
