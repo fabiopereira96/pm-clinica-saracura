@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -34,7 +35,7 @@ public class Medico implements Serializable {
 	@JoinColumn(name = "idEspecialidade")
 	private Especialidade especialidade;
 
-	@OneToMany(targetEntity = DiaAtendimento.class)
+	@ManyToMany(targetEntity = DiaAtendimento.class)
 	private List<DiaAtendimento> diaAtendimento = new ArrayList<>();
 
 	public Medico() {

@@ -225,9 +225,12 @@ public class EdicaoAgendaExameWindow {
 						diaAgendamento.setHours(horaAgendamento);
 						diaAgendamento.setMinutes(minutoAgendamento);
 						diaAgendamento.setSeconds(0);
-								
+
+						int selectedMedicoCrm = Integer.parseInt(comboBoxMedicos.getSelectedItem().toString().split("-")[0].trim());
+						Medico selectedMedico = MedicoDAO.getInstance().getById(selectedMedicoCrm);
+						
 						novaAgenda.setDataAgendamento(diaAgendamento);
-						novaAgenda.setMedico(MedicoDAO.getInstance().getById(agenda.getMedico().getCrm()));
+						novaAgenda.setMedico(selectedMedico);
 							
 						novaAgenda.setPaciente(PacienteDAO.getInstance().getById(Integer.parseInt(comboBoxPacientes.getSelectedItem().toString().split(" ")[0])));
 						

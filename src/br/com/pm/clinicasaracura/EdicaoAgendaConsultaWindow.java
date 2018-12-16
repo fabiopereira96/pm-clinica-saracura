@@ -152,6 +152,13 @@ public class EdicaoAgendaConsultaWindow {
 		voltarButton.setBounds(12, 351, 117, 25);
 		frame.getContentPane().add(voltarButton);
 		
+		List<Medico> medicos = MedicoDAO.getInstance().findAll();
+		
+		JComboBox comboBoxMedicos = new JComboBox(medicos.toArray());
+		comboBoxMedicos.setEditable(true);
+		comboBoxMedicos.setBounds(247, 75, 273, 19);
+		frame.getContentPane().add(comboBoxMedicos);
+		
 		JButton atualizarButton = new JButton("Atualizar");
 		atualizarButton.setEnabled(false);
 		atualizarButton.addActionListener(new ActionListener() {
@@ -172,9 +179,12 @@ public class EdicaoAgendaConsultaWindow {
 				diaAgendamento.setHours(horaAgendamento);
 				diaAgendamento.setMinutes(minutoAgendamento);
 				diaAgendamento.setSeconds(0);
-						
+
+				int selectedMedicoCrm = Integer.parseInt(comboBoxMedicos.getSelectedItem().toString().split("-")[0].trim());
+				Medico selectedMedico = MedicoDAO.getInstance().getById(selectedMedicoCrm);
+				
 				novaAgenda.setDiaAgendamento(diaAgendamento);
-				novaAgenda.setMedico(MedicoDAO.getInstance().getById(agenda.getMedico().getCrm()));
+				novaAgenda.setMedico(selectedMedico);
 					
 				novaAgenda.setPaciente(PacienteDAO.getInstance().getById(Integer.parseInt(comboBoxPacientes.getSelectedItem().toString().split(" ")[0])));
 				
@@ -210,13 +220,6 @@ public class EdicaoAgendaConsultaWindow {
 		lblMedicoResponsavel.setFont(new Font("Dialog", Font.BOLD, 11));
 		lblMedicoResponsavel.setBounds(247, 61, 165, 15);
 		frame.getContentPane().add(lblMedicoResponsavel);
-		
-		List<Medico> medicos = MedicoDAO.getInstance().findAll();
-		
-		JComboBox comboBoxMedicos = new JComboBox(medicos.toArray());
-		comboBoxMedicos.setEditable(true);
-		comboBoxMedicos.setBounds(247, 75, 273, 19);
-		frame.getContentPane().add(comboBoxMedicos);
 		
 		calendar.setDate(this.agenda.getDiaAgendamento());
 		comboBoxPacientes.setSelectedItem(this.agenda.getPaciente());

@@ -28,7 +28,7 @@ public class SelecaoMedicoController implements SelectionController<Medico> {
 	}
 	
 	public List<Medico> getElements() {
-		return MedicoDAO.getInstance().findAll();			
+		return MedicoDAO.getInstance().getByEspecialidade(espec.getIdEspecialidade());			
 	}
 
 	public void selectedElement(Medico m) {

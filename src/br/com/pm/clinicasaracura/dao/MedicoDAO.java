@@ -98,7 +98,7 @@ public class MedicoDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Medico> getNamesByEspecialidade(final int idEspecialidade) {
+	public List<Medico> getByEspecialidade(final int idEspecialidade) {
 		List<Medico> rows = entityManager.createQuery("FROM " + Medico.class.getName() 
 				+ " WHERE idEspecialidade = " + idEspecialidade ).getResultList();
 
